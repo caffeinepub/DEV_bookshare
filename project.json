@@ -1,0 +1,23 @@
+{
+  "overview": "A peer-to-peer book lending platform where users list books they want to lend, discover available books from others, and request to borrow them. An AI assistant powered by OpenAI reads all current listings and recommends books based on natural language prompts.",
+  "features": [
+    "List books for lending with title, author, and condition",
+    "Browse all available books from other users",
+    "AI recommendation agent that reads current listings and suggests books",
+    "Send borrow requests to lenders who approve or reject them",
+    "Request history for both borrowers and lenders",
+    "Internet Identity login",
+    "Admin-controlled OpenAI API key"
+  ],
+  "category": "social",
+  "tags": [
+    "books",
+    "lending",
+    "p2p",
+    "library",
+    "ai",
+    "recommendations",
+    "openai"
+  ],
+  "last_updated": "2026-05-11T11:04:52.561Z"
+}

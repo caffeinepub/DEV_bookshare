@@ -1,0 +1,69 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Time = int;
+type RequestStatus = 
+ variant {
+   approved;
+   pending;
+   rejected;
+ };
+type RequestId = nat;
+type BorrowRequestSummary = 
+ record {
+   bookId: BookId;
+   borrowerId: principal;
+   createdAt: Time;
+   id: RequestId;
+   lenderId: principal;
+   status: RequestStatus;
+ };
+type BookUpdateFields = 
+ record {
+   author: opt text;
+   condition: opt BookCondition;
+   location: opt text;
+   title: opt text;
+ };
+type BookSummary = 
+ record {
+   author: text;
+   available: bool;
+   condition: BookCondition;
+   createdAt: Time;
+   id: BookId;
+   location: text;
+   ownerId: principal;
+   title: text;
+ };
+type BookId = nat;
+type BookCondition = 
+ variant {
+   fair;
+   good;
+   new;
+   poor;
+ };
+service : {
+  _initializeAccessControl: () -> ();
+  addBook: (title: text, author: text, condition: BookCondition, location:
+   text) -> (BookSummary);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  deleteBook: (bookId: BookId) -> (bool);
+  getAIBookRecommendation: (userPrompt: text) -> (text);
+  getCallerUserRole: () -> (UserRole) query;
+  isCallerAdmin: () -> (bool) query;
+  isMyOpenAIConfigured: () -> (bool) query;
+  isOpenAIConfigured: () -> (bool) query;
+  listAllBooks: () -> (vec BookSummary) query;
+  listMyBooks: () -> (vec BookSummary) query;
+  listMyReceivedRequests: () -> (vec BorrowRequestSummary) query;
+  listMySentRequests: () -> (vec BorrowRequestSummary) query;
+  respondToBorrowRequest: (requestId: RequestId, approve: bool) -> (bool);
+  sendBorrowRequest: (bookId: BookId) -> (opt BorrowRequestSummary);
+  setMyOpenAIApiKey: (key: text) -> ();
+  updateBook: (bookId: BookId, fields: BookUpdateFields) -> (bool);
+}

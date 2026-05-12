@@ -1,0 +1,270 @@
+// Version: 4.0.0
+type AccessControlState__1019775519 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__776057016>
+  };
+type AccessControlState__111128767 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__492804158>
+  };
+type AccessControlState__540734506 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__630849650>
+  };
+type AccessControlState__605172600 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__547758359>
+  };
+type BookCondition__341693396 = {#fair; #good; #new_; #poor};
+type BookCondition__435817220 = {#fair; #good; #new_; #poor};
+type BookCondition__725333332 = {#fair; #good; #new_; #poor};
+type BookCondition__94130149 = {#fair; #good; #new_; #poor};
+type BookId__985893202 = Nat;
+type Book__473287601 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__341693396;
+    createdAt : Time__688418391;
+    id : BookId__985893202;
+    location : Text;
+    ownerId : Principal;
+    title : Text
+  };
+type Book__511770777 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__94130149;
+    createdAt : Int;
+    id : Nat;
+    ownerId : Principal;
+    title : Text
+  };
+type Book__786502028 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__725333332;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    title : Text
+  };
+type BorrowRequest__129846672 =
+  {
+    bookId : BookId__985893202;
+    borrowerId : Principal;
+    createdAt : Time__688418391;
+    id : RequestId__844275139;
+    lenderId : Principal;
+    var status : RequestStatus__502390890
+  };
+type BorrowRequest__357562640 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__291754285
+  };
+type BorrowRequest__823248986 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__457540350
+  };
+type BorrowRequest__969681925 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__29081399
+  };
+type Data__80296667<K, V> =
+  {var count : Nat__1040412405; kvs : [var ?(K, V)]};
+type Int__616954475 = Int;
+type Int__837511138 = Int__616954475;
+type Internal__41346355<K, V> =
+  {children : [var ?Node__1000929467<K, V>]; data : Data__80296667<K, V>};
+type Leaf__712614010<K, V> = {data : Data__80296667<K, V>};
+type Map__222667396<K, V> = Map__912772452<K, V>;
+type Map__709709801<K, V> =
+  {var root : Node__1000929467<K, V>; var size : Nat__1040412405};
+type Map__912772452<K, V> = Map__709709801<K, V>;
+type Nat__1040412405 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__184377177 =
+  {
+    accessControlState : AccessControlState__111128767;
+    books : Map__222667396<Nat, NewBook__340095575>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__823248986>
+  };
+type NewActor__383363135 =
+  {
+    accessControlState : AccessControlState__605172600;
+    conversations :
+      Map__222667396<Nat,
+                      {
+                        createdAt : Int;
+                        id : Nat;
+                        var messages :
+                          [{
+                             content : Text;
+                             id : Nat;
+                             role : {#assistant; #user};
+                             timestamp : Int
+                           }];
+                        owner : Principal;
+                        var title : Text;
+                        var updatedAt : Int
+                      }>;
+    nextConversationId : {var value : Nat};
+    nextMessageId : {var value : Nat};
+    openAIApiKey : {var value : ?Text}
+  };
+type NewActor__487633758 =
+  {
+    accessControlState : AccessControlState__1019775519;
+    books : Map__222667396<Nat, Book__786502028>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__357562640>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
+type NewActor__909781256 =
+  {
+    accessControlState : AccessControlState__540734506;
+    books : Map__222667396<Nat, Book__511770777>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__969681925>
+  };
+type NewBook__340095575 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__435817220;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    title : Text
+  };
+type Node__1000929467<K, V> =
+  {#internal : Internal__41346355<K, V>; #leaf : Leaf__712614010<K, V>};
+type OldActor__356510234 =
+  {
+    accessControlState : AccessControlState__540734506;
+    conversations :
+      Map__222667396<Nat,
+                      {
+                        createdAt : Int;
+                        id : Nat;
+                        var messages :
+                          [{
+                             content : Text;
+                             id : Nat;
+                             role : {#assistant; #user};
+                             timestamp : Int
+                           }];
+                        owner : Principal;
+                        var title : Text;
+                        var updatedAt : Int
+                      }>;
+    nextConversationId : {var value : Nat};
+    nextMessageId : {var value : Nat};
+    openAIApiKey : {var value : ?Text}
+  };
+type OldActor__436728981 =
+  {
+    accessControlState : AccessControlState__111128767;
+    books : Map__222667396<Nat, OldBook__864955599>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__823248986>
+  };
+type OldActor__670032553 =
+  {
+    accessControlState : AccessControlState__1019775519;
+    books : Map__222667396<Nat, Book__786502028>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__357562640>
+  };
+type OldActor__974481844 = {};
+type OldBook__864955599 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__435817220;
+    createdAt : Int;
+    id : Nat;
+    ownerId : Principal;
+    title : Text
+  };
+type RequestId__844275139 = Nat;
+type RequestStatus__29081399 = {#approved; #pending; #rejected};
+type RequestStatus__291754285 = {#approved; #pending; #rejected};
+type RequestStatus__457540350 = {#approved; #pending; #rejected};
+type RequestStatus__502390890 = {#approved; #pending; #rejected};
+type Time__298180599 = Int__837511138;
+type Time__688418391 = Time__298180599;
+type UserRole__1073662873 = {#admin; #guest; #user};
+type UserRole__492804158 = {#admin; #guest; #user};
+type UserRole__547758359 = {#admin; #guest; #user};
+type UserRole__630849650 = {#admin; #guest; #user};
+type UserRole__776057016 = {#admin; #guest; #user};
+{
+  "20260511_000000_InitChatbot" : OldActor__974481844 -> NewActor__383363135;
+  "20260511_000001_TransformToBookLending" :
+    (old : OldActor__356510234) -> NewActor__909781256;
+  "20260511_120000_AddBookLocation" :
+    (old : OldActor__436728981) -> NewActor__184377177;
+  "20260511_130000_AddPerUserOpenAIKeys" :
+    (old : OldActor__670032553) -> NewActor__487633758
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__222667396<Principal, UserRole__1073662873>
+    };
+  stable books :
+    {
+      var root : Node__1000929467<BookId__985893202, Book__473287601>;
+      var size : Nat__1040412405
+    };
+  stable nextBookId : {var value : Nat};
+  stable nextRequestId : {var value : Nat};
+  stable openAIApiKey : {var value : ?Text};
+  stable requests :
+    {
+      var root :
+        Node__1000929467<RequestId__844275139, BorrowRequest__129846672>;
+      var size : Nat__1040412405
+    };
+  stable userOpenAIKeys :
+    {
+      var root : Node__1000929467<Principal, Text>;
+      var size : Nat__1040412405
+    }
+};

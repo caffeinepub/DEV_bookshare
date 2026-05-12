@@ -1,0 +1,186 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: Lora, serif;
+    --font-body: DM Sans, sans-serif;
+    --font-mono: Geist Mono, monospace;
+    --radius: 0.625rem;
+
+    --background: 0.96 0.015 75;
+    --foreground: 0.2 0.03 50;
+    --card: 0.98 0.01 75;
+    --card-foreground: 0.2 0.03 50;
+    --popover: 0.98 0.01 75;
+    --popover-foreground: 0.2 0.03 50;
+
+    --primary: 0.55 0.14 30;
+    --primary-foreground: 0.98 0.01 75;
+
+    --secondary: 0.55 0.08 160;
+    --secondary-foreground: 0.2 0.03 50;
+    --muted: 0.88 0.02 75;
+    --muted-foreground: 0.5 0.02 50;
+
+    --accent: 0.5 0.1 140;
+    --accent-foreground: 0.98 0.01 140;
+
+    --destructive: 0.5 0.2 25;
+    --destructive-foreground: 0.96 0.01 25;
+
+    --border: 0.88 0.025 75;
+    --input: 0.88 0.025 75;
+    --ring: 0.55 0.14 30;
+
+    --chart-1: 0.55 0.14 30;
+    --chart-2: 0.5 0.1 140;
+    --chart-3: 0.55 0.08 160;
+    --chart-4: 0.65 0.08 50;
+    --chart-5: 0.58 0.12 80;
+
+    --sidebar: 0.92 0.01 75;
+    --sidebar-foreground: 0.2 0.03 50;
+    --sidebar-primary: 0.55 0.14 30;
+    --sidebar-primary-foreground: 0.98 0.01 75;
+    --sidebar-accent: 0.88 0.02 75;
+    --sidebar-accent-foreground: 0.2 0.03 50;
+    --sidebar-border: 0.88 0.025 75;
+    --sidebar-ring: 0.55 0.14 30;
+
+    --success: 0.55 0.15 150;
+  }
+
+  .dark {
+    --background: 0.15 0.01 50;
+    --foreground: 0.92 0.01 50;
+    --card: 0.18 0.01 50;
+    --card-foreground: 0.92 0.01 50;
+    --popover: 0.2 0.01 50;
+    --popover-foreground: 0.92 0.01 50;
+
+    --primary: 0.65 0.12 30;
+    --primary-foreground: 0.15 0.01 50;
+
+    --secondary: 0.55 0.08 160;
+    --secondary-foreground: 0.82 0.01 50;
+    --muted: 0.22 0.01 50;
+    --muted-foreground: 0.65 0.01 50;
+
+    --accent: 0.6 0.1 140;
+    --accent-foreground: 0.15 0.01 50;
+
+    --destructive: 0.6 0.18 25;
+    --destructive-foreground: 0.92 0.01 25;
+
+    --border: 0.28 0.01 50;
+    --input: 0.28 0.01 50;
+    --ring: 0.65 0.12 30;
+
+    --chart-1: 0.65 0.12 30;
+    --chart-2: 0.6 0.1 140;
+    --chart-3: 0.55 0.08 160;
+    --chart-4: 0.65 0.08 50;
+    --chart-5: 0.65 0.12 80;
+
+    --sidebar: 0.2 0.01 50;
+    --sidebar-foreground: 0.92 0.01 50;
+    --sidebar-primary: 0.65 0.12 30;
+    --sidebar-primary-foreground: 0.15 0.01 50;
+    --sidebar-accent: 0.25 0.01 50;
+    --sidebar-accent-foreground: 0.82 0.01 50;
+    --sidebar-border: 0.28 0.01 50;
+    --sidebar-ring: 0.65 0.12 30;
+
+    --success: 0.65 0.15 150;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+}
+
+@layer utilities {
+  @font-face {
+    font-family: "Lora";
+    src: url("/assets/fonts/Lora.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "DM Sans";
+    src: url("/assets/fonts/DMSans.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Geist Mono";
+    src: url("/assets/fonts/GeistMono.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  .typing-indicator {
+    display: inline-flex;
+    gap: 4px;
+    align-items: flex-end;
+  }
+
+  .typing-indicator span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .chat-bubble {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .typing-indicator span {
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-indicator span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-indicator span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%,
+      60%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.5;
+      }
+      30% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+  }
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
