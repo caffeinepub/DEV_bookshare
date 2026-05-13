@@ -11,13 +11,16 @@ export type Time = bigint;
 export interface BorrowRequestSummary {
     id: RequestId;
     status: RequestStatus;
+    ownerName?: string;
     borrowerId: Principal;
     createdAt: Time;
     lenderId: Principal;
     bookId: BookId;
+    requesterName?: string;
 }
 export interface BookUpdateFields {
     title?: string;
+    photoUrls?: Array<string>;
     author?: string;
     location?: string;
     condition?: BookCondition;
@@ -25,6 +28,8 @@ export interface BookUpdateFields {
 export interface BookSummary {
     id: BookId;
     title: string;
+    photoUrls: Array<string>;
+    ownerName?: string;
     ownerId: Principal;
     createdAt: Time;
     author: string;
@@ -51,11 +56,13 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
-    addBook(title: string, author: string, condition: BookCondition, location: string): Promise<BookSummary>;
+    addBook(title: string, author: string, condition: BookCondition, location: string, photoUrls: Array<string>): Promise<BookSummary>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteBook(bookId: BookId): Promise<boolean>;
     getAIBookRecommendation(userPrompt: string): Promise<string>;
     getCallerUserRole(): Promise<UserRole>;
+    getUserName(): Promise<string | null>;
+    getUserNameByPrincipal(p: Principal): Promise<string | null>;
     isCallerAdmin(): Promise<boolean>;
     isMyOpenAIConfigured(): Promise<boolean>;
     isOpenAIConfigured(): Promise<boolean>;
@@ -66,5 +73,6 @@ export interface backendInterface {
     respondToBorrowRequest(requestId: RequestId, approve: boolean): Promise<boolean>;
     sendBorrowRequest(bookId: BookId): Promise<BorrowRequestSummary | null>;
     setMyOpenAIApiKey(key: string): Promise<void>;
+    setUserName(name: string): Promise<void>;
     updateBook(bookId: BookId, fields: BookUpdateFields): Promise<boolean>;
 }

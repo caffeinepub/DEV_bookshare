@@ -1,7 +1,7 @@
-import { g as createLucideIcon, r as reactExports, j as jsxRuntimeExports, h as useComposedRefs, i as cn, s as useListMyReceivedRequests, t as useListMySentRequests, v as useRespondToBorrowRequest, d as Skeleton, f as ue, e as BookOpen, B as Button, L as LoaderCircle, X } from "./index-iI9L4DeR.js";
-import { B as Badge, C as Card, a as CardHeader, b as CardTitle, c as CardContent, d as CardFooter } from "./card-CetsEPfx.js";
-import { e as useId, P as Primitive, c as composeEventHandlers, g as createContextScope, k as createCollection, j as useDirection, b as useControllableState, u as useCallbackRef, f as Presence, C as Check } from "./index-DlXQCdZP.js";
-import { S as Send } from "./send-BXLLlw5D.js";
+import { c as createLucideIcon, r as reactExports, j as jsxRuntimeExports, i as useComposedRefs, k as cn, t as useListMyReceivedRequests, v as useListMySentRequests, w as useRespondToBorrowRequest, f as Skeleton, h as ue, g as BookOpen, B as Button, L as LoaderCircle, X } from "./index-BQsmHi3H.js";
+import { B as Badge, C as Card, a as CardHeader, b as CardTitle, c as CardContent, d as CardFooter } from "./card-c17eGIDo.js";
+import { e as useId, P as Primitive, c as composeEventHandlers, g as createContextScope, k as createCollection, j as useDirection, b as useControllableState, u as useCallbackRef, f as Presence, C as Check } from "./index-DB1GMs67.js";
+import { S as Send } from "./send-aGyzZJc7.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -529,7 +529,7 @@ function RequestCard({
 }) {
   const status = STATUS_BADGE[req.status] ?? STATUS_BADGE.pending;
   const StatusIcon = status.icon;
-  const personLabel = isReceived ? `${(req.borrowerId ?? "").slice(0, 10)}...` : `${(req.lenderId ?? "").slice(0, 10)}...`;
+  const personLabel = isReceived ? req.requesterName ?? "Anonymous" : req.ownerName ?? "Anonymous";
   const personRole = isReceived ? "Requested by" : "Lender";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { className: "flex flex-col border-border hover:shadow-md transition-smooth", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [

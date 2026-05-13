@@ -19,6 +19,8 @@ export const Time = IDL.Int;
 export const BookSummary = IDL.Record({
   'id' : BookId,
   'title' : IDL.Text,
+  'photoUrls' : IDL.Vec(IDL.Text),
+  'ownerName' : IDL.Opt(IDL.Text),
   'ownerId' : IDL.Principal,
   'createdAt' : Time,
   'author' : IDL.Text,
@@ -40,13 +42,16 @@ export const RequestStatus = IDL.Variant({
 export const BorrowRequestSummary = IDL.Record({
   'id' : RequestId,
   'status' : RequestStatus,
+  'ownerName' : IDL.Opt(IDL.Text),
   'borrowerId' : IDL.Principal,
   'createdAt' : Time,
   'lenderId' : IDL.Principal,
   'bookId' : BookId,
+  'requesterName' : IDL.Opt(IDL.Text),
 });
 export const BookUpdateFields = IDL.Record({
   'title' : IDL.Opt(IDL.Text),
+  'photoUrls' : IDL.Opt(IDL.Vec(IDL.Text)),
   'author' : IDL.Opt(IDL.Text),
   'location' : IDL.Opt(IDL.Text),
   'condition' : IDL.Opt(BookCondition),
@@ -55,7 +60,7 @@ export const BookUpdateFields = IDL.Record({
 export const idlService = IDL.Service({
   '_initializeAccessControl' : IDL.Func([], [], []),
   'addBook' : IDL.Func(
-      [IDL.Text, IDL.Text, BookCondition, IDL.Text],
+      [IDL.Text, IDL.Text, BookCondition, IDL.Text, IDL.Vec(IDL.Text)],
       [BookSummary],
       [],
     ),
@@ -63,6 +68,12 @@ export const idlService = IDL.Service({
   'deleteBook' : IDL.Func([BookId], [IDL.Bool], []),
   'getAIBookRecommendation' : IDL.Func([IDL.Text], [IDL.Text], []),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getUserName' : IDL.Func([], [IDL.Opt(IDL.Text)], ['query']),
+  'getUserNameByPrincipal' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(IDL.Text)],
+      ['query'],
+    ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isMyOpenAIConfigured' : IDL.Func([], [IDL.Bool], ['query']),
   'isOpenAIConfigured' : IDL.Func([], [IDL.Bool], ['query']),
@@ -81,6 +92,7 @@ export const idlService = IDL.Service({
   'respondToBorrowRequest' : IDL.Func([RequestId, IDL.Bool], [IDL.Bool], []),
   'sendBorrowRequest' : IDL.Func([BookId], [IDL.Opt(BorrowRequestSummary)], []),
   'setMyOpenAIApiKey' : IDL.Func([IDL.Text], [], []),
+  'setUserName' : IDL.Func([IDL.Text], [], []),
   'updateBook' : IDL.Func([BookId, BookUpdateFields], [IDL.Bool], []),
 });
 
@@ -98,6 +110,8 @@ export const idlFactory = ({ IDL }) => {
   const BookSummary = IDL.Record({
     'id' : BookId,
     'title' : IDL.Text,
+    'photoUrls' : IDL.Vec(IDL.Text),
+    'ownerName' : IDL.Opt(IDL.Text),
     'ownerId' : IDL.Principal,
     'createdAt' : Time,
     'author' : IDL.Text,
@@ -119,13 +133,16 @@ export const idlFactory = ({ IDL }) => {
   const BorrowRequestSummary = IDL.Record({
     'id' : RequestId,
     'status' : RequestStatus,
+    'ownerName' : IDL.Opt(IDL.Text),
     'borrowerId' : IDL.Principal,
     'createdAt' : Time,
     'lenderId' : IDL.Principal,
     'bookId' : BookId,
+    'requesterName' : IDL.Opt(IDL.Text),
   });
   const BookUpdateFields = IDL.Record({
     'title' : IDL.Opt(IDL.Text),
+    'photoUrls' : IDL.Opt(IDL.Vec(IDL.Text)),
     'author' : IDL.Opt(IDL.Text),
     'location' : IDL.Opt(IDL.Text),
     'condition' : IDL.Opt(BookCondition),
@@ -134,7 +151,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     '_initializeAccessControl' : IDL.Func([], [], []),
     'addBook' : IDL.Func(
-        [IDL.Text, IDL.Text, BookCondition, IDL.Text],
+        [IDL.Text, IDL.Text, BookCondition, IDL.Text, IDL.Vec(IDL.Text)],
         [BookSummary],
         [],
       ),
@@ -142,6 +159,12 @@ export const idlFactory = ({ IDL }) => {
     'deleteBook' : IDL.Func([BookId], [IDL.Bool], []),
     'getAIBookRecommendation' : IDL.Func([IDL.Text], [IDL.Text], []),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getUserName' : IDL.Func([], [IDL.Opt(IDL.Text)], ['query']),
+    'getUserNameByPrincipal' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(IDL.Text)],
+        ['query'],
+      ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isMyOpenAIConfigured' : IDL.Func([], [IDL.Bool], ['query']),
     'isOpenAIConfigured' : IDL.Func([], [IDL.Bool], ['query']),
@@ -164,6 +187,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'setMyOpenAIApiKey' : IDL.Func([IDL.Text], [], []),
+    'setUserName' : IDL.Func([IDL.Text], [], []),
     'updateBook' : IDL.Func([BookId, BookUpdateFields], [IDL.Bool], []),
   });
 };

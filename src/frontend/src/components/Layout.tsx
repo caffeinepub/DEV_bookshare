@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/hooks/use-auth";
+import { useGetUserName } from "@/hooks/use-backend";
 import type { AppRoute } from "@/types";
 import {
   ArrowLeftRight,
@@ -35,9 +36,11 @@ export default function Layout({
 }: LayoutProps) {
   const { logout, principalText } = useAuth();
   const handleLogout = onLogout ?? logout;
+  const { data: userName } = useGetUserName();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const displayName = userName?.trim() || "Anonymous";
   const shortPrincipal = principalText
     ? `${principalText.slice(0, 5)}...${principalText.slice(-4)}`
     : "";
@@ -64,7 +67,7 @@ export default function Layout({
                 <BookOpen className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-display font-bold text-xl text-foreground tracking-tight hidden sm:block">
-                OpenShelf
+                BookShare
               </span>
             </button>
 
@@ -108,11 +111,18 @@ export default function Layout({
             <div className="flex items-center gap-2">
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/60">
                 <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-[10px] font-bold text-primary">U</span>
+                  <span className="text-[10px] font-bold text-primary">
+                    {displayName.charAt(0).toUpperCase()}
+                  </span>
                 </div>
-                <span className="text-xs text-muted-foreground font-mono">
-                  {shortPrincipal}
+                <span className="text-xs text-foreground font-medium max-w-[120px] truncate">
+                  {displayName}
                 </span>
+                {shortPrincipal && (
+                  <span className="text-[10px] text-muted-foreground font-mono hidden lg:block">
+                    ({shortPrincipal})
+                  </span>
+                )}
               </div>
               <Button
                 variant="ghost"
@@ -181,11 +191,11 @@ export default function Layout({
                 <div className="flex items-center gap-2">
                   <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
                     <span className="text-[10px] font-bold text-primary">
-                      U
+                      {displayName.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-xs text-muted-foreground font-mono">
-                    {shortPrincipal}
+                  <span className="text-xs text-foreground font-medium max-w-[100px] truncate">
+                    {displayName}
                   </span>
                 </div>
                 <button

@@ -3,11 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  useGetUserName,
   useIsMyOpenAIConfigured,
   useSetMyOpenAIApiKey,
+  useSetUserName,
 } from "@/hooks/use-backend";
-import { ArrowLeft, CheckCircle2, Key, Loader2, XCircle } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Key,
+  Loader2,
+  User,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface SettingsPageProps {
@@ -18,10 +27,25 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
   const { data: isConfigured, isLoading: configuredLoading } =
     useIsMyOpenAIConfigured();
   const setKeyMutation = useSetMyOpenAIApiKey();
+  const { data: currentName, isLoading: nameLoading } = useGetUserName();
+  const setNameMutation = useSetUserName();
 
   const [apiKey, setApiKey] = useState("");
   // showForm: true when key is not set yet, or user clicked "Change key"
   const [showForm, setShowForm] = useState(false);
+
+  const [displayName, setDisplayName] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [nameSaved, setNameSaved] = useState(false);
+  const didPrefill = { current: false };
+
+  // Pre-fill display name when loaded (once only)
+  useEffect(() => {
+    if (currentName && !didPrefill.current) {
+      didPrefill.current = true;
+      setDisplayName(currentName);
+    }
+  }, [currentName]);
 
   const handleSaveKey = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +57,28 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
       toast.success("OpenAI API key saved successfully.");
     } catch {
       toast.error("Failed to save API key. Please try again.");
+    }
+  };
+
+  const handleSaveName = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = displayName.trim();
+    if (!trimmed) {
+      setNameError("Display name cannot be empty.");
+      return;
+    }
+    if (trimmed.length > 60) {
+      setNameError("Name must be 60 characters or fewer.");
+      return;
+    }
+    setNameError("");
+    try {
+      await setNameMutation.mutateAsync(trimmed);
+      setNameSaved(true);
+      setTimeout(() => setNameSaved(false), 3000);
+      toast.success("Display name updated.");
+    } catch {
+      toast.error("Failed to update name. Please try again.");
     }
   };
 
@@ -65,6 +111,86 @@ export default function SettingsPage({ onBack }: SettingsPageProps) {
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-xl mx-auto px-6 py-8 space-y-8">
+          {/* Display Name Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                <User className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-foreground">Display Name</h2>
+                <p className="text-xs text-muted-foreground">
+                  Shown on your book listings and borrow requests.
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-border bg-card p-4">
+              {nameLoading ? (
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Loading...
+                </div>
+              ) : (
+                <form onSubmit={handleSaveName} className="space-y-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="display-name">Your name</Label>
+                    <Input
+                      id="display-name"
+                      type="text"
+                      placeholder="e.g. Alex Reader"
+                      value={displayName}
+                      onChange={(e) => {
+                        setDisplayName(e.target.value);
+                        if (nameError) setNameError("");
+                        if (nameSaved) setNameSaved(false);
+                      }}
+                      maxLength={60}
+                      data-ocid="settings.display_name_input"
+                    />
+                    {nameError && (
+                      <p
+                        className="text-xs text-destructive"
+                        data-ocid="settings.name_field_error"
+                      >
+                        {nameError}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Button
+                      type="submit"
+                      disabled={
+                        !displayName.trim() ||
+                        setNameMutation.isPending ||
+                        displayName.trim() === (currentName ?? "")
+                      }
+                      data-ocid="settings.save_name_button"
+                    >
+                      {setNameMutation.isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save Name"
+                      )}
+                    </Button>
+                    {nameSaved && (
+                      <span
+                        className="text-xs text-success flex items-center gap-1"
+                        data-ocid="settings.name_success_state"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        Saved!
+                      </span>
+                    )}
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+
           {/* OpenAI API Key Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">

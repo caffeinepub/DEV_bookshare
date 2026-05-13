@@ -1,10 +1,10 @@
 import Map "mo:core/Map";
 import Runtime "mo:core/Runtime";
-import AccessControl "mo:caffeineai-authorization/access-control";
 import Types "../types/books";
 import BooksLib "../lib/books";
 import OpenAI "../lib/openai";
 import Principal "mo:core/Principal";
+import AccessControl "mo:caffeineai-authorization/access-control";
 
 mixin (
   accessControlState : AccessControl.AccessControlState,
@@ -14,6 +14,7 @@ mixin (
   nextRequestId : { var value : Nat },
   openAIApiKey : { var value : ?Text },
   userOpenAIKeys : Map.Map<Principal, Text>,
+  userDisplayNames : Map.Map<Principal, Text>,
 ) {
   // ── OpenAI API key management (admin-only) ────────────────────────────────
 
@@ -38,14 +39,33 @@ mixin (
 
   // ── Book listings ─────────────────────────────────────────────────────────
 
+  // ── User display names ────────────────────────────────────────────────────
+
+  /// Sets the calling user's display name.
+  public shared ({ caller }) func setUserName(name : Text) : async () {
+    userDisplayNames.add(caller, name);
+  };
+
+  /// Returns the calling user's own display name, or null if not set.
+  public query ({ caller }) func getUserName() : async ?Text {
+    userDisplayNames.get(caller);
+  };
+
+  /// Returns the display name for any principal, or null if not set.
+  public query func getUserNameByPrincipal(p : Principal) : async ?Text {
+    userDisplayNames.get(p);
+  };
+
+  // ── Book listings ─────────────────────────────────────────────────────────
+
   /// Returns all available books listed by any user.
   public query func listAllBooks() : async [Types.BookSummary] {
-    BooksLib.listAvailableBooks(books);
+    BooksLib.listAvailableBooks(books, userDisplayNames);
   };
 
   /// Returns all books listed by the authenticated caller.
   public query ({ caller }) func listMyBooks() : async [Types.BookSummary] {
-    BooksLib.listMyBooks(books, caller);
+    BooksLib.listMyBooks(books, caller, userDisplayNames);
   };
 
   /// Adds a new book to the caller's listings.
@@ -54,8 +74,9 @@ mixin (
     author : Text,
     condition : Types.BookCondition,
     location : Text,
+    photoUrls : [Text],
   ) : async Types.BookSummary {
-    BooksLib.addBook(books, nextBookId, caller, title, author, condition, location);
+    BooksLib.addBook(books, nextBookId, caller, title, author, condition, location, photoUrls, userDisplayNames);
   };
 
   /// Removes a book from the caller's listings.
@@ -75,7 +96,7 @@ mixin (
 
   /// Sends a borrow request to the owner of the specified book.
   public shared ({ caller }) func sendBorrowRequest(bookId : Types.BookId) : async ?Types.BorrowRequestSummary {
-    BooksLib.sendBorrowRequest(books, requests, nextRequestId, caller, bookId);
+    BooksLib.sendBorrowRequest(books, requests, nextRequestId, caller, bookId, userDisplayNames);
   };
 
   /// Responds to a borrow request (approve or reject). Only the lender may call this.
@@ -85,12 +106,12 @@ mixin (
 
   /// Returns all borrow requests received by the caller (as lender).
   public query ({ caller }) func listMyReceivedRequests() : async [Types.BorrowRequestSummary] {
-    BooksLib.listReceivedRequests(requests, caller);
+    BooksLib.listReceivedRequests(requests, caller, userDisplayNames);
   };
 
   /// Returns all borrow requests sent by the caller (as borrower).
   public query ({ caller }) func listMySentRequests() : async [Types.BorrowRequestSummary] {
-    BooksLib.listSentRequests(requests, caller);
+    BooksLib.listSentRequests(requests, caller, userDisplayNames);
   };
 
   // ── AI Recommendations ────────────────────────────────────────────────────
@@ -103,7 +124,7 @@ mixin (
       case null return "OpenAI API key not set. Please configure your key in Settings.";
     };
     let config = OpenAI.configForKey(key);
-    let booksContext = BooksLib.buildBooksContext(books);
+    let booksContext = BooksLib.buildBooksContext(books, userDisplayNames);
     let prompt = booksContext # "\n\nUser request: " # userPrompt;
     await* OpenAI.runChatCompletion(config, prompt);
   };

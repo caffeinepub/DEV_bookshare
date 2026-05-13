@@ -1,4 +1,9 @@
 // Version: 4.0.0
+type AccessControlState__1015968530 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__257052985>
+  };
 type AccessControlState__1019775519 =
   {
     var adminAssigned : Bool;
@@ -19,9 +24,22 @@ type AccessControlState__605172600 =
     var adminAssigned : Bool;
     userRoles : Map__222667396<Principal, UserRole__547758359>
   };
+type AccessControlState__707870101 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__741666657>
+  };
+type AccessControlState__839757849 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__222667396<Principal, UserRole__421363558>
+  };
+type BookCondition__15453959 = {#fair; #good; #new_; #poor};
 type BookCondition__341693396 = {#fair; #good; #new_; #poor};
+type BookCondition__386815311 = {#fair; #good; #new_; #poor};
 type BookCondition__435817220 = {#fair; #good; #new_; #poor};
 type BookCondition__725333332 = {#fair; #good; #new_; #poor};
+type BookCondition__748618354 = {#fair; #good; #new_; #poor};
 type BookCondition__94130149 = {#fair; #good; #new_; #poor};
 type BookId__985893202 = Nat;
 type Book__473287601 =
@@ -33,6 +51,7 @@ type Book__473287601 =
     id : BookId__985893202;
     location : Text;
     ownerId : Principal;
+    var photoUrls : [Text];
     title : Text
   };
 type Book__511770777 =
@@ -42,6 +61,17 @@ type Book__511770777 =
     condition : BookCondition__94130149;
     createdAt : Int;
     id : Nat;
+    ownerId : Principal;
+    title : Text
+  };
+type Book__675744522 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__386815311;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
     ownerId : Principal;
     title : Text
   };
@@ -65,6 +95,24 @@ type BorrowRequest__129846672 =
     lenderId : Principal;
     var status : RequestStatus__502390890
   };
+type BorrowRequest__260197966 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__137035551
+  };
+type BorrowRequest__30186105 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__1025655309
+  };
 type BorrowRequest__357562640 =
   {
     bookId : Nat;
@@ -82,6 +130,15 @@ type BorrowRequest__823248986 =
     id : Nat;
     lenderId : Principal;
     var status : RequestStatus__457540350
+  };
+type BorrowRequest__878091690 =
+  {
+    bookId : Nat;
+    borrowerId : Principal;
+    createdAt : Int;
+    id : Nat;
+    lenderId : Principal;
+    var status : RequestStatus__131932610
   };
 type BorrowRequest__969681925 =
   {
@@ -147,6 +204,39 @@ type NewActor__487633758 =
     requests : Map__222667396<Nat, BorrowRequest__357562640>;
     userOpenAIKeys : Map__222667396<Principal, Text>
   };
+type NewActor__731063355 =
+  {
+    accessControlState : AccessControlState__1015968530;
+    books : Map__222667396<Nat, NewBook__639623392>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__260197966>;
+    userDisplayNames : Map__222667396<Principal, Text>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
+type NewActor__829574244 =
+  {
+    accessControlState : AccessControlState__839757849;
+    books : Map__222667396<Nat, Book__675744522>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__878091690>;
+    userDisplayNames : Map__222667396<Principal, Text>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
+type NewActor__871746250 =
+  {
+    accessControlState : AccessControlState__707870101;
+    books : Map__222667396<Nat, NewBook__681669541>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__30186105>;
+    userDisplayNames : Map__222667396<Principal, Text>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
 type NewActor__909781256 =
   {
     accessControlState : AccessControlState__540734506;
@@ -165,6 +255,30 @@ type NewBook__340095575 =
     id : Nat;
     location : Text;
     ownerId : Principal;
+    title : Text
+  };
+type NewBook__639623392 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__748618354;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    var photoUrls : [Text];
+    title : Text
+  };
+type NewBook__681669541 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__15453959;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    var photoUrl : ?Text;
     title : Text
   };
 type Node__1000929467<K, V> =
@@ -201,6 +315,17 @@ type OldActor__436728981 =
     openAIApiKey : {var value : ?Text};
     requests : Map__222667396<Nat, BorrowRequest__823248986>
   };
+type OldActor__558082687 =
+  {
+    accessControlState : AccessControlState__707870101;
+    books : Map__222667396<Nat, OldBook__177278077>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__30186105>;
+    userDisplayNames : Map__222667396<Principal, Text>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
 type OldActor__670032553 =
   {
     accessControlState : AccessControlState__1019775519;
@@ -210,7 +335,39 @@ type OldActor__670032553 =
     openAIApiKey : {var value : ?Text};
     requests : Map__222667396<Nat, BorrowRequest__357562640>
   };
+type OldActor__711215501 =
+  {
+    accessControlState : AccessControlState__1015968530;
+    books : Map__222667396<Nat, OldBook__968267072>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__260197966>;
+    userDisplayNames : Map__222667396<Principal, Text>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
+type OldActor__838035335 =
+  {
+    accessControlState : AccessControlState__839757849;
+    books : Map__222667396<Nat, Book__675744522>;
+    nextBookId : {var value : Nat};
+    nextRequestId : {var value : Nat};
+    openAIApiKey : {var value : ?Text};
+    requests : Map__222667396<Nat, BorrowRequest__878091690>;
+    userOpenAIKeys : Map__222667396<Principal, Text>
+  };
 type OldActor__974481844 = {};
+type OldBook__177278077 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__15453959;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    title : Text
+  };
 type OldBook__864955599 =
   {
     author : Text;
@@ -221,7 +378,22 @@ type OldBook__864955599 =
     ownerId : Principal;
     title : Text
   };
+type OldBook__968267072 =
+  {
+    author : Text;
+    var available : Bool;
+    condition : BookCondition__748618354;
+    createdAt : Int;
+    id : Nat;
+    location : Text;
+    ownerId : Principal;
+    var photoUrl : ?Text;
+    title : Text
+  };
 type RequestId__844275139 = Nat;
+type RequestStatus__1025655309 = {#approved; #pending; #rejected};
+type RequestStatus__131932610 = {#approved; #pending; #rejected};
+type RequestStatus__137035551 = {#approved; #pending; #rejected};
 type RequestStatus__29081399 = {#approved; #pending; #rejected};
 type RequestStatus__291754285 = {#approved; #pending; #rejected};
 type RequestStatus__457540350 = {#approved; #pending; #rejected};
@@ -229,9 +401,12 @@ type RequestStatus__502390890 = {#approved; #pending; #rejected};
 type Time__298180599 = Int__837511138;
 type Time__688418391 = Time__298180599;
 type UserRole__1073662873 = {#admin; #guest; #user};
+type UserRole__257052985 = {#admin; #guest; #user};
+type UserRole__421363558 = {#admin; #guest; #user};
 type UserRole__492804158 = {#admin; #guest; #user};
 type UserRole__547758359 = {#admin; #guest; #user};
 type UserRole__630849650 = {#admin; #guest; #user};
+type UserRole__741666657 = {#admin; #guest; #user};
 type UserRole__776057016 = {#admin; #guest; #user};
 {
   "20260511_000000_InitChatbot" : OldActor__974481844 -> NewActor__383363135;
@@ -240,7 +415,13 @@ type UserRole__776057016 = {#admin; #guest; #user};
   "20260511_120000_AddBookLocation" :
     (old : OldActor__436728981) -> NewActor__184377177;
   "20260511_130000_AddPerUserOpenAIKeys" :
-    (old : OldActor__670032553) -> NewActor__487633758
+    (old : OldActor__670032553) -> NewActor__487633758;
+  "20260512_000000_AddUserDisplayNames" :
+    (old : OldActor__838035335) -> NewActor__829574244;
+  "20260512_100000_AddBookPhoto" :
+    (old : OldActor__558082687) -> NewActor__871746250;
+  "20260512_110000_MultipleBookPhotos" :
+    (old : OldActor__711215501) -> NewActor__731063355
 }
 actor  {
   stable accessControlState :
@@ -260,6 +441,11 @@ actor  {
     {
       var root :
         Node__1000929467<RequestId__844275139, BorrowRequest__129846672>;
+      var size : Nat__1040412405
+    };
+  stable userDisplayNames :
+    {
+      var root : Node__1000929467<Principal, Text>;
       var size : Nat__1040412405
     };
   stable userOpenAIKeys :

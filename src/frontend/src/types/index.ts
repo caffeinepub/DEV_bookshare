@@ -16,8 +16,12 @@ export interface BookSummary {
   isAvailable: boolean;
   /** Principal stringified for display */
   ownerId: string;
+  /** Display name of the owner, or null if not set */
+  ownerName: string | null;
   /** Pickup/collection location provided by the lender (empty string if not set) */
   location: string;
+  /** Photo data URLs (base64), up to 10 */
+  photoUrls: string[];
 }
 
 // Borrow request summary used in the frontend (mapped from backend BorrowRequestSummary)
@@ -30,6 +34,10 @@ export interface BorrowRequestSummary {
   lenderId: string;
   status: RequestStatus;
   createdAt: bigint;
+  /** Display name of the requester, or null if not set */
+  requesterName: string | null;
+  /** Display name of the book owner, or null if not set */
+  ownerName: string | null;
 }
 
 // AI recommendation result

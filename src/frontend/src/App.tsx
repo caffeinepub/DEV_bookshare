@@ -1,8 +1,10 @@
 import Layout from "@/components/Layout";
+import NamePromptModal from "@/components/NamePromptModal";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toaster } from "@/components/ui/sonner";
 import { useAuth } from "@/hooks/use-auth";
+import { useGetUserName } from "@/hooks/use-backend";
 import SettingsPage from "@/pages/SettingsPage";
 import type { AppRoute } from "@/types";
 import { Component, Suspense, lazy, useState } from "react";
@@ -71,6 +73,13 @@ class PageErrorBoundary extends Component<
 function AppContent() {
   const [currentRoute, setCurrentRoute] = useState<AppRoute>("dashboard");
   const { logout } = useAuth();
+  const { data: userName, isLoading: nameLoading } = useGetUserName();
+
+  // Block the UI until we know if a name has been set
+  const nameIsReady = !nameLoading;
+  const needsName =
+    nameIsReady &&
+    (userName === null || userName === undefined || userName.trim() === "");
 
   const handleLogout = () => {
     setCurrentRoute("dashboard");
@@ -104,6 +113,14 @@ function AppContent() {
         </PageErrorBoundary>
       </Layout>
       <Toaster richColors closeButton />
+      {/* Blocking name prompt — only shown when actor is ready and name is missing */}
+      {nameIsReady && needsName && (
+        <NamePromptModal
+          onNameSet={() => {
+            /* query invalidated by mutation */
+          }}
+        />
+      )}
     </ProtectedRoute>
   );
 }

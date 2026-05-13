@@ -16,6 +16,7 @@ actor {
   let nextRequestId : { var value : Nat };
   let openAIApiKey : { var value : ?Text };
   let userOpenAIKeys : Map.Map<Principal, Text>;
+  let userDisplayNames : Map.Map<Principal, Text>;
 
   include MixinBooks(
     accessControlState,
@@ -25,5 +26,6 @@ actor {
     nextRequestId,
     openAIApiKey,
     userOpenAIKeys,
+    userDisplayNames,
   );
 };

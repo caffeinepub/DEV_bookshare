@@ -14,6 +14,7 @@ const sampleBooks: BookSummary[] = [
     available: true,
     condition: BookCondition.good,
     location: "Central Library, Shelf B3",
+    photoUrls: [],
   },
   {
     id: BigInt(2),
@@ -24,6 +25,7 @@ const sampleBooks: BookSummary[] = [
     available: false,
     condition: BookCondition.fair,
     location: "",
+    photoUrls: [],
   },
   {
     id: BigInt(3),
@@ -34,6 +36,7 @@ const sampleBooks: BookSummary[] = [
     available: true,
     condition: BookCondition.new_,
     location: "Downtown Community Centre",
+    photoUrls: [],
   },
   {
     id: BigInt(4),
@@ -44,6 +47,7 @@ const sampleBooks: BookSummary[] = [
     available: true,
     condition: BookCondition.good,
     location: "",
+    photoUrls: [],
   },
 ];
 
@@ -57,6 +61,7 @@ const myBooks: BookSummary[] = [
     available: true,
     condition: BookCondition.new_,
     location: "My home — ask for pickup details",
+    photoUrls: [],
   },
   {
     id: BigInt(6),
@@ -67,6 +72,7 @@ const myBooks: BookSummary[] = [
     available: false,
     condition: BookCondition.poor,
     location: "",
+    photoUrls: [],
   },
 ];
 
@@ -102,6 +108,7 @@ export const mockBackend: backendInterface = {
     available: true,
     condition,
     location,
+    photoUrls: [],
   }),
   assignCallerUserRole: async () => undefined,
   deleteBook: async () => true,
@@ -127,4 +134,7 @@ export const mockBackend: backendInterface = {
   setMyOpenAIApiKey: async () => undefined,
   updateBook: async () => true,
   _initializeAccessControl: async () => undefined,
+  getUserName: async () => "BookShare User",
+  getUserNameByPrincipal: async () => "BookShare User",
+  setUserName: async () => undefined,
 };

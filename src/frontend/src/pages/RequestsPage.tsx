@@ -65,8 +65,8 @@ function RequestCard({
   const status = STATUS_BADGE[req.status] ?? STATUS_BADGE.pending;
   const StatusIcon = status.icon;
   const personLabel = isReceived
-    ? `${(req.borrowerId ?? "").slice(0, 10)}...`
-    : `${(req.lenderId ?? "").slice(0, 10)}...`;
+    ? (req.requesterName ?? "Anonymous")
+    : (req.ownerName ?? "Anonymous");
   const personRole = isReceived ? "Requested by" : "Lender";
 
   return (

@@ -18,6 +18,8 @@ export type BookId = bigint;
 export interface BookSummary {
   'id' : BookId,
   'title' : string,
+  'photoUrls' : Array<string>,
+  'ownerName' : [] | [string],
   'ownerId' : Principal,
   'createdAt' : Time,
   'author' : string,
@@ -27,6 +29,7 @@ export interface BookSummary {
 }
 export interface BookUpdateFields {
   'title' : [] | [string],
+  'photoUrls' : [] | [Array<string>],
   'author' : [] | [string],
   'location' : [] | [string],
   'condition' : [] | [BookCondition],
@@ -34,10 +37,12 @@ export interface BookUpdateFields {
 export interface BorrowRequestSummary {
   'id' : RequestId,
   'status' : RequestStatus,
+  'ownerName' : [] | [string],
   'borrowerId' : Principal,
   'createdAt' : Time,
   'lenderId' : Principal,
   'bookId' : BookId,
+  'requesterName' : [] | [string],
 }
 export type RequestId = bigint;
 export type RequestStatus = { 'pending' : null } |
@@ -49,11 +54,16 @@ export type UserRole = { 'admin' : null } |
   { 'guest' : null };
 export interface _SERVICE {
   '_initializeAccessControl' : ActorMethod<[], undefined>,
-  'addBook' : ActorMethod<[string, string, BookCondition, string], BookSummary>,
+  'addBook' : ActorMethod<
+    [string, string, BookCondition, string, Array<string>],
+    BookSummary
+  >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteBook' : ActorMethod<[BookId], boolean>,
   'getAIBookRecommendation' : ActorMethod<[string], string>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getUserName' : ActorMethod<[], [] | [string]>,
+  'getUserNameByPrincipal' : ActorMethod<[Principal], [] | [string]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isMyOpenAIConfigured' : ActorMethod<[], boolean>,
   'isOpenAIConfigured' : ActorMethod<[], boolean>,
@@ -64,6 +74,7 @@ export interface _SERVICE {
   'respondToBorrowRequest' : ActorMethod<[RequestId, boolean], boolean>,
   'sendBorrowRequest' : ActorMethod<[BookId], [] | [BorrowRequestSummary]>,
   'setMyOpenAIApiKey' : ActorMethod<[string], undefined>,
+  'setUserName' : ActorMethod<[string], undefined>,
   'updateBook' : ActorMethod<[BookId, BookUpdateFields], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;

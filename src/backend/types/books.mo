@@ -9,6 +9,7 @@ module {
     author : ?Text;
     condition : ?BookCondition;
     location : ?Text;
+    photoUrls : ?[Text];
   };
 
   public type BookCondition = {
@@ -33,17 +34,20 @@ module {
     location : Text;
     createdAt : Time.Time;
     var available : Bool;
+    var photoUrls : [Text];
   };
 
   public type BookSummary = {
     id : BookId;
     ownerId : Principal;
+    ownerName : ?Text;
     title : Text;
     author : Text;
     condition : BookCondition;
     location : Text;
     createdAt : Time.Time;
     available : Bool;
+    photoUrls : [Text];
   };
 
   public type BorrowRequest = {
@@ -60,6 +64,8 @@ module {
     bookId : BookId;
     borrowerId : Principal;
     lenderId : Principal;
+    requesterName : ?Text;
+    ownerName : ?Text;
     status : RequestStatus;
     createdAt : Time.Time;
   };

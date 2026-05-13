@@ -19,6 +19,8 @@ type BorrowRequestSummary =
    createdAt: Time;
    id: RequestId;
    lenderId: principal;
+   ownerName: opt text;
+   requesterName: opt text;
    status: RequestStatus;
  };
 type BookUpdateFields = 
@@ -26,6 +28,7 @@ type BookUpdateFields =
    author: opt text;
    condition: opt BookCondition;
    location: opt text;
+   photoUrls: opt vec text;
    title: opt text;
  };
 type BookSummary = 
@@ -37,6 +40,8 @@ type BookSummary =
    id: BookId;
    location: text;
    ownerId: principal;
+   ownerName: opt text;
+   photoUrls: vec text;
    title: text;
  };
 type BookId = nat;
@@ -50,11 +55,13 @@ type BookCondition =
 service : {
   _initializeAccessControl: () -> ();
   addBook: (title: text, author: text, condition: BookCondition, location:
-   text) -> (BookSummary);
+   text, photoUrls: vec text) -> (BookSummary);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   deleteBook: (bookId: BookId) -> (bool);
   getAIBookRecommendation: (userPrompt: text) -> (text);
   getCallerUserRole: () -> (UserRole) query;
+  getUserName: () -> (opt text) query;
+  getUserNameByPrincipal: (p: principal) -> (opt text) query;
   isCallerAdmin: () -> (bool) query;
   isMyOpenAIConfigured: () -> (bool) query;
   isOpenAIConfigured: () -> (bool) query;
@@ -65,5 +72,6 @@ service : {
   respondToBorrowRequest: (requestId: RequestId, approve: bool) -> (bool);
   sendBorrowRequest: (bookId: BookId) -> (opt BorrowRequestSummary);
   setMyOpenAIApiKey: (key: text) -> ();
+  setUserName: (name: text) -> ();
   updateBook: (bookId: BookId, fields: BookUpdateFields) -> (bool);
 }

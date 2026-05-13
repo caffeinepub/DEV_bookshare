@@ -1,7 +1,7 @@
-import { g as createLucideIcon, r as reactExports, h as useComposedRefs, j as jsxRuntimeExports, R as ReactDOM, X, i as cn, k as reactDomExports, l as useListMyBooks, m as useAddBook, n as useDeleteBook, o as useUpdateBook, B as Button, p as Label, I as Input, L as LoaderCircle, d as Skeleton, e as BookOpen, q as BookMarked, f as ue } from "./index-iI9L4DeR.js";
-import { C as Card, a as CardHeader, B as Badge, b as CardTitle, c as CardContent, d as CardFooter } from "./card-CetsEPfx.js";
-import { u as useCallbackRef$1, P as Primitive, c as composeEventHandlers, d as dispatchDiscreteCustomEvent, a as useLayoutEffect2, b as useControllableState, e as useId, f as Presence, g as createContextScope, h as createSlot, i as createContext2, j as useDirection, k as createCollection, C as Check } from "./index-DlXQCdZP.js";
-import { M as MapPin } from "./map-pin-CjFysJy9.js";
+import { c as createLucideIcon, r as reactExports, i as useComposedRefs, j as jsxRuntimeExports, R as ReactDOM, X, k as cn, l as reactDomExports, m as useListMyBooks, n as useAddBook, o as useDeleteBook, p as useUpdateBook, B as Button, q as Label, I as Input, L as LoaderCircle, f as Skeleton, g as BookOpen, s as BookMarked, h as ue } from "./index-BQsmHi3H.js";
+import { C as Card, a as CardHeader, B as Badge, b as CardTitle, c as CardContent, d as CardFooter } from "./card-c17eGIDo.js";
+import { u as useCallbackRef$1, P as Primitive, c as composeEventHandlers, d as dispatchDiscreteCustomEvent, a as useLayoutEffect2, b as useControllableState, e as useId, f as Presence, g as createContextScope, h as createSlot, i as createContext2, j as useDirection, k as createCollection, C as Check } from "./index-DB1GMs67.js";
+import { I as Images, M as MapPin } from "./map-pin-B53w5ARx.js";
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -5233,6 +5233,7 @@ function SelectScrollDownButton({
     }
   );
 }
+const MAX_PHOTOS = 10;
 const CONDITIONS = ["new", "good", "fair", "poor"];
 const CONDITION_LABEL = {
   new: "New",
@@ -5258,6 +5259,102 @@ const CONDITION_STYLE = {
     dot: "bg-destructive"
   }
 };
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function MultiPhotoUploader({
+  photos,
+  onPhotosChange,
+  idPrefix
+}) {
+  const fileInputRef = reactExports.useRef(null);
+  const canAdd = photos.length < MAX_PHOTOS;
+  const handleFiles = async (files) => {
+    if (!files || files.length === 0) return;
+    const remaining = MAX_PHOTOS - photos.length;
+    const toProcess = Array.from(files).slice(0, remaining);
+    const dataUrls = await Promise.all(toProcess.map(fileToDataUrl));
+    onPhotosChange([...photos, ...dataUrls]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+  const removePhoto = (index2) => {
+    onPhotosChange(photos.filter((_, i) => i !== index2));
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { children: [
+        "Photos",
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground", children: [
+        photos.length,
+        "/",
+        MAX_PHOTOS
+      ] })
+    ] }),
+    photos.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-2", children: photos.map((url, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative group", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "img",
+        {
+          src: url,
+          alt: `${idx + 1} of ${photos.length}`,
+          className: "h-20 w-full rounded-lg object-cover border border-border"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          "aria-label": "Remove photo",
+          onClick: () => removePhoto(idx),
+          className: "absolute top-1 right-1 h-5 w-5 rounded-full bg-background/90 border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground hover:border-destructive",
+          "data-ocid": `${idPrefix}.photo_remove.${idx + 1}`,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X, { className: "h-3 w-3" })
+        }
+      ),
+      idx === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute bottom-1 left-1 text-[10px] bg-background/80 text-foreground px-1 rounded", children: "Cover" })
+    ] }, url)) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        ref: fileInputRef,
+        id: `${idPrefix}-photo-input`,
+        type: "file",
+        accept: "image/*",
+        multiple: true,
+        className: "sr-only",
+        disabled: !canAdd,
+        onChange: (e) => handleFiles(e.target.files),
+        "data-ocid": `${idPrefix}.photo_upload`
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Button,
+      {
+        type: "button",
+        variant: "outline",
+        size: "sm",
+        disabled: !canAdd,
+        onClick: () => {
+          var _a;
+          return (_a = fileInputRef.current) == null ? void 0 : _a.click();
+        },
+        className: "w-full border-dashed",
+        "data-ocid": `${idPrefix}.add_photo_button`,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-3.5 w-3.5 mr-1.5" }),
+          canAdd ? `Add photo${photos.length > 0 ? "s" : ""}` : "Maximum photos reached"
+        ]
+      }
+    )
+  ] });
+}
 function MyBooksPage() {
   const { data: books, isLoading } = useListMyBooks();
   const addMutation = useAddBook();
@@ -5268,18 +5365,45 @@ function MyBooksPage() {
   const [author, setAuthor] = reactExports.useState("");
   const [condition, setCondition] = reactExports.useState("good");
   const [location, setLocation] = reactExports.useState("");
+  const [addPhotos, setAddPhotos] = reactExports.useState([]);
   const [deletingId, setDeletingId] = reactExports.useState(null);
   const [editOpen, setEditOpen] = reactExports.useState(false);
   const [editState, setEditState] = reactExports.useState(null);
+  const resetAdd = () => {
+    setTitle("");
+    setAuthor("");
+    setCondition("good");
+    setLocation("");
+    setAddPhotos([]);
+  };
   const openEdit = (book) => {
     setEditState({
       bookId: book.id,
       title: book.title,
       author: book.author,
       condition: book.condition,
-      location: book.location
+      location: book.location,
+      photos: book.photoUrls ?? []
     });
     setEditOpen(true);
+  };
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    if (!title.trim() || !author.trim()) return;
+    try {
+      await addMutation.mutateAsync({
+        title: title.trim(),
+        author: author.trim(),
+        condition,
+        location,
+        photoUrls: addPhotos
+      });
+      ue.success(`"${title}" added to your shelf!`);
+      resetAdd();
+      setOpen(false);
+    } catch {
+      ue.error("Failed to add book. Please try again.");
+    }
   };
   const handleEdit = async (e) => {
     e.preventDefault();
@@ -5291,7 +5415,8 @@ function MyBooksPage() {
           title: editState.title.trim(),
           author: editState.author.trim(),
           condition: editState.condition,
-          location: editState.location.trim()
+          location: editState.location.trim(),
+          photoUrls: editState.photos
         }
       });
       ue.success("Book updated successfully.");
@@ -5299,26 +5424,6 @@ function MyBooksPage() {
       setEditState(null);
     } catch {
       ue.error("Failed to update book. Please try again.");
-    }
-  };
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    if (!title.trim() || !author.trim()) return;
-    try {
-      await addMutation.mutateAsync({
-        title: title.trim(),
-        author: author.trim(),
-        condition,
-        location
-      });
-      ue.success(`"${title}" added to your shelf!`);
-      setTitle("");
-      setAuthor("");
-      setCondition("good");
-      setLocation("");
-      setOpen(false);
-    } catch {
-      ue.error("Failed to add book. Please try again.");
     }
   };
   const handleDelete = async (id, bookTitle) => {
@@ -5339,109 +5444,134 @@ function MyBooksPage() {
         /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display text-3xl font-bold text-foreground", children: "My Books" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground mt-1", children: "Books you've listed for the community to borrow" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(Dialog, { open, onOpenChange: setOpen, children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { "data-ocid": "my-books.add_book_button", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-4 w-4 mr-2" }),
-          "Add Book"
-        ] }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { "data-ocid": "my-books.add_book_dialog", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display", children: "Add a Book to Lend" }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleAdd, className: "space-y-4 mt-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "book-title", children: "Title" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "book-title",
-                  placeholder: "e.g. The Midnight Library",
-                  value: title,
-                  onChange: (e) => setTitle(e.target.value),
-                  required: true,
-                  "data-ocid": "my-books.title_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "book-author", children: "Author" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "book-author",
-                  placeholder: "e.g. Matt Haig",
-                  value: author,
-                  onChange: (e) => setAuthor(e.target.value),
-                  required: true,
-                  "data-ocid": "my-books.author_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "book-location", children: [
-                "Location",
-                " ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "book-location",
-                  placeholder: "e.g. Downtown Library, Shelf 3",
-                  value: location,
-                  onChange: (e) => setLocation(e.target.value),
-                  "data-ocid": "my-books.location_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Condition" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                Select,
-                {
-                  value: condition,
-                  onValueChange: (v) => setCondition(v),
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "my-books.condition_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CONDITIONS.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Dialog,
+        {
+          open,
+          onOpenChange: (o) => {
+            setOpen(o);
+            if (!o) resetAdd();
+          },
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTrigger, { asChild: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { "data-ocid": "my-books.add_book_button", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-4 w-4 mr-2" }),
+              "Add Book"
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              DialogContent,
+              {
+                className: "max-h-[90vh] overflow-y-auto",
+                "data-ocid": "my-books.add_book_dialog",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display", children: "Add a Book to Lend" }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleAdd, className: "space-y-4 mt-2", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "book-title", children: "Title" }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "span",
+                        Input,
                         {
-                          className: `inline-block h-2 w-2 rounded-full ${CONDITION_STYLE[c].dot}`
+                          id: "book-title",
+                          placeholder: "e.g. The Midnight Library",
+                          value: title,
+                          onChange: (e) => setTitle(e.target.value),
+                          required: true,
+                          "data-ocid": "my-books.title_input"
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "book-author", children: "Author" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          id: "book-author",
+                          placeholder: "e.g. Matt Haig",
+                          value: author,
+                          onChange: (e) => setAuthor(e.target.value),
+                          required: true,
+                          "data-ocid": "my-books.author_input"
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "book-location", children: [
+                        "Location",
+                        " ",
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          id: "book-location",
+                          placeholder: "e.g. Downtown Library, Shelf 3",
+                          value: location,
+                          onChange: (e) => setLocation(e.target.value),
+                          "data-ocid": "my-books.location_input"
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Condition" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        Select,
+                        {
+                          value: condition,
+                          onValueChange: (v) => setCondition(v),
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "my-books.condition_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CONDITIONS.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+                              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                "span",
+                                {
+                                  className: `inline-block h-2 w-2 rounded-full ${CONDITION_STYLE[c].dot}`
+                                }
+                              ),
+                              CONDITION_LABEL[c]
+                            ] }) }, c)) })
+                          ]
                         }
                       ),
-                      CONDITION_LABEL[c]
-                    ] }) }, c)) })
-                  ]
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "New = unopened · Good = light use · Fair = visible wear · Poor = heavy wear" })
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "pt-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Button,
-                {
-                  type: "button",
-                  variant: "outline",
-                  onClick: () => setOpen(false),
-                  "data-ocid": "my-books.cancel_button",
-                  children: "Cancel"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Button,
-                {
-                  type: "submit",
-                  disabled: !title.trim() || !author.trim() || addMutation.isPending,
-                  "data-ocid": "my-books.submit_button",
-                  children: addMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin mr-2" }),
-                    "Adding..."
-                  ] }) : "Add Book"
-                }
-              )
-            ] })
-          ] })
-        ] })
-      ] })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "New = unopened · Good = light use · Fair = visible wear · Poor = heavy wear" })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      MultiPhotoUploader,
+                      {
+                        photos: addPhotos,
+                        onPhotosChange: setAddPhotos,
+                        idPrefix: "my-books.add"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "pt-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Button,
+                        {
+                          type: "button",
+                          variant: "outline",
+                          onClick: () => setOpen(false),
+                          "data-ocid": "my-books.cancel_button",
+                          children: "Cancel"
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Button,
+                        {
+                          type: "submit",
+                          disabled: !title.trim() || !author.trim() || addMutation.isPending,
+                          "data-ocid": "my-books.submit_button",
+                          children: addMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin mr-2" }),
+                            "Adding..."
+                          ] }) : "Add Book"
+                        }
+                      )
+                    ] })
+                  ] })
+                ]
+              }
+            )
+          ]
+        }
+      )
     ] }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8", children: isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4", children: [1, 2, 3].map((i) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-44 w-full rounded-xl" }, i)) }) : books && books.length > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
@@ -5450,12 +5580,28 @@ function MyBooksPage() {
         "data-ocid": "my-books.books_list",
         children: books.map((book, idx) => {
           const cond = CONDITION_STYLE[book.condition];
+          const photos = book.photoUrls ?? [];
+          const coverPhoto = photos[0];
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Card,
             {
               "data-ocid": `my-books.book_card.${idx + 1}`,
-              className: "flex flex-col hover:shadow-md transition-smooth",
+              className: "flex flex-col hover:shadow-md transition-smooth overflow-hidden",
               children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                  coverPhoto ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "img",
+                    {
+                      src: coverPhoto,
+                      alt: book.title,
+                      className: "w-full h-36 object-cover"
+                    }
+                  ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full h-36 bg-muted/40 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Images, { className: "h-8 w-8 text-muted-foreground/40" }) }),
+                  photos.length > 1 && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "absolute bottom-2 right-2 bg-background/80 backdrop-blur-sm text-foreground text-xs px-1.5 py-0.5 rounded-full border border-border font-medium", children: [
+                    photos.length,
+                    " photos"
+                  ] })
+                ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "h-4 w-4 text-primary" }) }),
@@ -5562,113 +5708,128 @@ function MyBooksPage() {
           setEditOpen(o);
           if (!o) setEditState(null);
         },
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { "data-ocid": "my-books.edit_book_dialog", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display", children: "Edit Book" }) }),
-          editState && /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleEdit, className: "space-y-4 mt-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "edit-book-title", children: "Title" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "edit-book-title",
-                  placeholder: "e.g. The Midnight Library",
-                  value: editState.title,
-                  onChange: (e) => setEditState(
-                    (s) => s ? { ...s, title: e.target.value } : s
-                  ),
-                  required: true,
-                  "data-ocid": "my-books.edit_title_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "edit-book-author", children: "Author" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "edit-book-author",
-                  placeholder: "e.g. Matt Haig",
-                  value: editState.author,
-                  onChange: (e) => setEditState(
-                    (s) => s ? { ...s, author: e.target.value } : s
-                  ),
-                  required: true,
-                  "data-ocid": "my-books.edit_author_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "edit-book-location", children: [
-                "Location",
-                " ",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Input,
-                {
-                  id: "edit-book-location",
-                  placeholder: "e.g. Downtown Library, Shelf 3",
-                  value: editState.location,
-                  onChange: (e) => setEditState(
-                    (s) => s ? { ...s, location: e.target.value } : s
-                  ),
-                  "data-ocid": "my-books.edit_location_input"
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Condition" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                Select,
-                {
-                  value: editState.condition,
-                  onValueChange: (v) => setEditState(
-                    (s) => s ? { ...s, condition: v } : s
-                  ),
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "my-books.edit_condition_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CONDITIONS.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx(
-                        "span",
-                        {
-                          className: `inline-block h-2 w-2 rounded-full ${CONDITION_STYLE[c].dot}`
-                        }
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          DialogContent,
+          {
+            className: "max-h-[90vh] overflow-y-auto",
+            "data-ocid": "my-books.edit_book_dialog",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display", children: "Edit Book" }) }),
+              editState && /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleEdit, className: "space-y-4 mt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "edit-book-title", children: "Title" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "edit-book-title",
+                      placeholder: "e.g. The Midnight Library",
+                      value: editState.title,
+                      onChange: (e) => setEditState(
+                        (s) => s ? { ...s, title: e.target.value } : s
                       ),
-                      CONDITION_LABEL[c]
-                    ] }) }, c)) })
-                  ]
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "pt-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Button,
-                {
-                  type: "button",
-                  variant: "outline",
-                  onClick: () => {
-                    setEditOpen(false);
-                    setEditState(null);
-                  },
-                  "data-ocid": "my-books.edit_cancel_button",
-                  children: "Cancel"
-                }
-              ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Button,
-                {
-                  type: "submit",
-                  disabled: !editState.title.trim() || !editState.author.trim() || updateMutation.isPending,
-                  "data-ocid": "my-books.edit_save_button",
-                  children: updateMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin mr-2" }),
-                    "Saving..."
-                  ] }) : "Save Changes"
-                }
-              )
-            ] })
-          ] })
-        ] })
+                      required: true,
+                      "data-ocid": "my-books.edit_title_input"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "edit-book-author", children: "Author" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "edit-book-author",
+                      placeholder: "e.g. Matt Haig",
+                      value: editState.author,
+                      onChange: (e) => setEditState(
+                        (s) => s ? { ...s, author: e.target.value } : s
+                      ),
+                      required: true,
+                      "data-ocid": "my-books.edit_author_input"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Label, { htmlFor: "edit-book-location", children: [
+                    "Location",
+                    " ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground font-normal", children: "(optional)" })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "edit-book-location",
+                      placeholder: "e.g. Downtown Library, Shelf 3",
+                      value: editState.location,
+                      onChange: (e) => setEditState(
+                        (s) => s ? { ...s, location: e.target.value } : s
+                      ),
+                      "data-ocid": "my-books.edit_location_input"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Condition" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: editState.condition,
+                      onValueChange: (v) => setEditState(
+                        (s) => s ? { ...s, condition: v } : s
+                      ),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "my-books.edit_condition_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CONDITIONS.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "span",
+                            {
+                              className: `inline-block h-2 w-2 rounded-full ${CONDITION_STYLE[c].dot}`
+                            }
+                          ),
+                          CONDITION_LABEL[c]
+                        ] }) }, c)) })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  MultiPhotoUploader,
+                  {
+                    photos: editState.photos,
+                    onPhotosChange: (photos) => setEditState((s) => s ? { ...s, photos } : s),
+                    idPrefix: "my-books.edit"
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { className: "pt-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      type: "button",
+                      variant: "outline",
+                      onClick: () => {
+                        setEditOpen(false);
+                        setEditState(null);
+                      },
+                      "data-ocid": "my-books.edit_cancel_button",
+                      children: "Cancel"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      type: "submit",
+                      disabled: !editState.title.trim() || !editState.author.trim() || updateMutation.isPending,
+                      "data-ocid": "my-books.edit_save_button",
+                      children: updateMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin mr-2" }),
+                        "Saving..."
+                      ] }) : "Save Changes"
+                    }
+                  )
+                ] })
+              ] })
+            ]
+          }
+        )
       }
     )
   ] });

@@ -84,6 +84,37 @@ export function useSetOpenAIApiKey() {
   });
 }
 
+// ── User name ────────────────────────────────────────────────────────────────
+
+export function useGetUserName() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery<string | null>({
+    queryKey: ["userName"],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getUserName();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useSetUserName() {
+  const { actor } = useBackendActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (name: string) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.setUserName(name);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userName"] });
+      // Refresh book lists so ownerName reflects the new name
+      queryClient.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient.invalidateQueries({ queryKey: ["allBooks"] });
+    },
+  });
+}
+
 // ── Books ─────────────────────────────────────────────────────────────────────
 
 function mapBookSummary(b: BackendBookSummary): BookSummary {
@@ -94,7 +125,9 @@ function mapBookSummary(b: BackendBookSummary): BookSummary {
     condition: b.condition as BookCondition,
     isAvailable: b.available,
     ownerId: b.ownerId?.toString() ?? "",
+    ownerName: b.ownerName ?? null,
     location: b.location,
+    photoUrls: b.photoUrls ?? [],
   };
 }
 
@@ -108,6 +141,8 @@ function mapRequestSummary(
     lenderId: r.lenderId?.toString() ?? "",
     status: r.status as RequestStatus,
     createdAt: r.createdAt,
+    requesterName: r.requesterName ?? null,
+    ownerName: r.ownerName ?? null,
   };
 }
 
@@ -146,6 +181,7 @@ export function useAddBook() {
       author: string;
       condition: BookCondition;
       location?: string;
+      photoUrls?: string[];
     }) => {
       if (!actor) throw new Error("Actor not available");
       return actor.addBook(
@@ -153,6 +189,7 @@ export function useAddBook() {
         params.author,
         params.condition as import("@/backend").BookCondition,
         params.location?.trim() ?? "",
+        params.photoUrls ?? [],
       );
     },
     onSuccess: () => {
@@ -187,6 +224,7 @@ export function useUpdateBook() {
         author?: string;
         condition?: string;
         location?: string;
+        photoUrls?: string[];
       };
     }) => {
       if (!actor) throw new Error("Actor not available");

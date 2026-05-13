@@ -31,19 +31,22 @@ import {
   useListMyBooks,
   useUpdateBook,
 } from "@/hooks/use-backend";
-import type { BookCondition } from "@/types";
+import type { BookCondition, BookSummary } from "@/types";
 import {
   BookMarked,
   BookOpen,
+  Images,
   Loader2,
   MapPin,
   Pencil,
   Plus,
   Trash2,
+  X,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
+const MAX_PHOTOS = 10;
 const CONDITIONS: BookCondition[] = ["new", "good", "fair", "poor"];
 
 const CONDITION_LABEL: Record<BookCondition, string> = {
@@ -72,12 +75,123 @@ const CONDITION_STYLE: Record<BookCondition, { badge: string; dot: string }> = {
   },
 };
 
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Multi-photo uploader ──────────────────────────────────────────────────────
+
+interface MultiPhotoUploaderProps {
+  photos: string[];
+  onPhotosChange: (photos: string[]) => void;
+  idPrefix: string;
+}
+
+function MultiPhotoUploader({
+  photos,
+  onPhotosChange,
+  idPrefix,
+}: MultiPhotoUploaderProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const canAdd = photos.length < MAX_PHOTOS;
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const remaining = MAX_PHOTOS - photos.length;
+    const toProcess = Array.from(files).slice(0, remaining);
+    const dataUrls = await Promise.all(toProcess.map(fileToDataUrl));
+    onPhotosChange([...photos, ...dataUrls]);
+    // Reset so same file can be re-added if removed
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removePhoto = (index: number) => {
+    onPhotosChange(photos.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <Label>
+          Photos{" "}
+          <span className="text-muted-foreground font-normal">(optional)</span>
+        </Label>
+        <span className="text-xs text-muted-foreground">
+          {photos.length}/{MAX_PHOTOS}
+        </span>
+      </div>
+
+      {photos.length > 0 && (
+        <div className="grid grid-cols-3 gap-2">
+          {photos.map((url, idx) => (
+            <div key={url} className="relative group">
+              <img
+                src={url}
+                alt={`${idx + 1} of ${photos.length}`}
+                className="h-20 w-full rounded-lg object-cover border border-border"
+              />
+              <button
+                type="button"
+                aria-label="Remove photo"
+                onClick={() => removePhoto(idx)}
+                className="absolute top-1 right-1 h-5 w-5 rounded-full bg-background/90 border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-destructive-foreground hover:border-destructive"
+                data-ocid={`${idPrefix}.photo_remove.${idx + 1}`}
+              >
+                <X className="h-3 w-3" />
+              </button>
+              {idx === 0 && (
+                <span className="absolute bottom-1 left-1 text-[10px] bg-background/80 text-foreground px-1 rounded">
+                  Cover
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <input
+        ref={fileInputRef}
+        id={`${idPrefix}-photo-input`}
+        type="file"
+        accept="image/*"
+        multiple
+        className="sr-only"
+        disabled={!canAdd}
+        onChange={(e) => handleFiles(e.target.files)}
+        data-ocid={`${idPrefix}.photo_upload`}
+      />
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        disabled={!canAdd}
+        onClick={() => fileInputRef.current?.click()}
+        className="w-full border-dashed"
+        data-ocid={`${idPrefix}.add_photo_button`}
+      >
+        <Plus className="h-3.5 w-3.5 mr-1.5" />
+        {canAdd
+          ? `Add photo${photos.length > 0 ? "s" : ""}`
+          : "Maximum photos reached"}
+      </Button>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 interface EditState {
   bookId: bigint;
   title: string;
   author: string;
   condition: BookCondition;
   location: string;
+  photos: string[];
 }
 
 export default function MyBooksPage() {
@@ -86,32 +200,56 @@ export default function MyBooksPage() {
   const deleteMutation = useDeleteBook();
   const updateMutation = useUpdateBook();
 
+  // Add dialog state
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [condition, setCondition] = useState<BookCondition>("good");
   const [location, setLocation] = useState("");
+  const [addPhotos, setAddPhotos] = useState<string[]>([]);
   const [deletingId, setDeletingId] = useState<bigint | null>(null);
 
   // Edit dialog state
   const [editOpen, setEditOpen] = useState(false);
   const [editState, setEditState] = useState<EditState | null>(null);
 
-  const openEdit = (book: {
-    id: bigint;
-    title: string;
-    author: string;
-    condition: BookCondition;
-    location: string;
-  }) => {
+  const resetAdd = () => {
+    setTitle("");
+    setAuthor("");
+    setCondition("good");
+    setLocation("");
+    setAddPhotos([]);
+  };
+
+  const openEdit = (book: BookSummary) => {
     setEditState({
       bookId: book.id,
       title: book.title,
       author: book.author,
       condition: book.condition,
       location: book.location,
+      photos: book.photoUrls ?? [],
     });
     setEditOpen(true);
+  };
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !author.trim()) return;
+    try {
+      await addMutation.mutateAsync({
+        title: title.trim(),
+        author: author.trim(),
+        condition,
+        location,
+        photoUrls: addPhotos,
+      });
+      toast.success(`"${title}" added to your shelf!`);
+      resetAdd();
+      setOpen(false);
+    } catch {
+      toast.error("Failed to add book. Please try again.");
+    }
   };
 
   const handleEdit = async (e: React.FormEvent) => {
@@ -125,6 +263,7 @@ export default function MyBooksPage() {
           author: editState.author.trim(),
           condition: editState.condition,
           location: editState.location.trim(),
+          photoUrls: editState.photos,
         },
       });
       toast.success("Book updated successfully.");
@@ -132,27 +271,6 @@ export default function MyBooksPage() {
       setEditState(null);
     } catch {
       toast.error("Failed to update book. Please try again.");
-    }
-  };
-
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !author.trim()) return;
-    try {
-      await addMutation.mutateAsync({
-        title: title.trim(),
-        author: author.trim(),
-        condition,
-        location,
-      });
-      toast.success(`"${title}" added to your shelf!`);
-      setTitle("");
-      setAuthor("");
-      setCondition("good");
-      setLocation("");
-      setOpen(false);
-    } catch {
-      toast.error("Failed to add book. Please try again.");
     }
   };
 
@@ -183,14 +301,23 @@ export default function MyBooksPage() {
                 Books you've listed for the community to borrow
               </p>
             </div>
-            <Dialog open={open} onOpenChange={setOpen}>
+            <Dialog
+              open={open}
+              onOpenChange={(o) => {
+                setOpen(o);
+                if (!o) resetAdd();
+              }}
+            >
               <DialogTrigger asChild>
                 <Button data-ocid="my-books.add_book_button">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Book
                 </Button>
               </DialogTrigger>
-              <DialogContent data-ocid="my-books.add_book_dialog">
+              <DialogContent
+                className="max-h-[90vh] overflow-y-auto"
+                data-ocid="my-books.add_book_dialog"
+              >
                 <DialogHeader>
                   <DialogTitle className="font-display">
                     Add a Book to Lend
@@ -263,6 +390,11 @@ export default function MyBooksPage() {
                       Poor = heavy wear
                     </p>
                   </div>
+                  <MultiPhotoUploader
+                    photos={addPhotos}
+                    onPhotosChange={setAddPhotos}
+                    idPrefix="my-books.add"
+                  />
                   <DialogFooter className="pt-2">
                     <Button
                       type="button"
@@ -310,12 +442,33 @@ export default function MyBooksPage() {
           >
             {books.map((book, idx) => {
               const cond = CONDITION_STYLE[book.condition as BookCondition];
+              const photos = book.photoUrls ?? [];
+              const coverPhoto = photos[0];
               return (
                 <Card
                   key={String(book.id)}
                   data-ocid={`my-books.book_card.${idx + 1}`}
-                  className="flex flex-col hover:shadow-md transition-smooth"
+                  className="flex flex-col hover:shadow-md transition-smooth overflow-hidden"
                 >
+                  {/* Cover photo with count badge */}
+                  <div className="relative">
+                    {coverPhoto ? (
+                      <img
+                        src={coverPhoto}
+                        alt={book.title}
+                        className="w-full h-36 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-36 bg-muted/40 flex items-center justify-center">
+                        <Images className="h-8 w-8 text-muted-foreground/40" />
+                      </div>
+                    )}
+                    {photos.length > 1 && (
+                      <span className="absolute bottom-2 right-2 bg-background/80 backdrop-blur-sm text-foreground text-xs px-1.5 py-0.5 rounded-full border border-border font-medium">
+                        {photos.length} photos
+                      </span>
+                    )}
+                  </div>
                   <CardHeader className="pb-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -424,7 +577,10 @@ export default function MyBooksPage() {
           if (!o) setEditState(null);
         }}
       >
-        <DialogContent data-ocid="my-books.edit_book_dialog">
+        <DialogContent
+          className="max-h-[90vh] overflow-y-auto"
+          data-ocid="my-books.edit_book_dialog"
+        >
           <DialogHeader>
             <DialogTitle className="font-display">Edit Book</DialogTitle>
           </DialogHeader>
@@ -506,6 +662,13 @@ export default function MyBooksPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <MultiPhotoUploader
+                photos={editState.photos}
+                onPhotosChange={(photos) =>
+                  setEditState((s) => (s ? { ...s, photos } : s))
+                }
+                idPrefix="my-books.edit"
+              />
               <DialogFooter className="pt-2">
                 <Button
                   type="button"

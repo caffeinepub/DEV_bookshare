@@ -4,12 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useGetAIBookRecommendation,
+  useGetUserName,
   useIsMyOpenAIConfigured,
   useListAllBooks,
   useSendBorrowRequest,
 } from "@/hooks/use-backend";
 import type { AppRoute, BookSummary } from "@/types";
-import { BookOpen, Loader2, MapPin, Send, Sparkles } from "lucide-react";
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
+  Images,
+  Loader2,
+  MapPin,
+  Send,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -36,18 +47,117 @@ const CONDITION_STYLE: Record<string, { badge: string; label: string }> = {
   },
 };
 
+// ── Photo gallery viewer ─────────────────────────────────────────────────────
+
+function PhotoGallery({ photos }: { photos: string[] }) {
+  const [active, setActive] = useState(0);
+  if (photos.length === 0) return null;
+
+  const prev = () => setActive((i) => (i - 1 + photos.length) % photos.length);
+  const next = () => setActive((i) => (i + 1) % photos.length);
+
+  return (
+    <div className="space-y-2" data-ocid="dashboard.book_photo_gallery">
+      {/* Main photo */}
+      <div className="relative">
+        <img
+          src={photos[active]}
+          alt={`${active + 1} of ${photos.length}`}
+          className="w-full h-64 object-cover rounded-lg border border-border"
+        />
+        {photos.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={prev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              data-ocid="dashboard.gallery_prev"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={next}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-muted transition-colors"
+              data-ocid="dashboard.gallery_next"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <span className="absolute bottom-2 right-2 bg-background/80 text-foreground text-xs px-2 py-0.5 rounded-full border border-border">
+              {active + 1} / {photos.length}
+            </span>
+          </>
+        )}
+      </div>
+      {/* Thumbnails */}
+      {photos.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-1">
+          {photos.map((url, idx) => (
+            <button
+              key={url}
+              type="button"
+              aria-label={`View image ${idx + 1}`}
+              onClick={() => setActive(idx)}
+              className={`flex-shrink-0 h-14 w-14 rounded-md overflow-hidden border-2 transition-colors ${
+                idx === active
+                  ? "border-primary"
+                  : "border-border hover:border-primary/50"
+              }`}
+              data-ocid={`dashboard.gallery_thumb.${idx + 1}`}
+            >
+              <img
+                src={url}
+                alt={`Thumbnail ${idx + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Book card ────────────────────────────────────────────────────────────────
+
 function BookCard({
   book,
-  onRequest,
-  isRequesting,
+  onClick,
 }: {
   book: BookSummary;
-  onRequest: () => void;
-  isRequesting: boolean;
+  onClick: () => void;
 }) {
   const cond = CONDITION_STYLE[book.condition];
+  const photos = book.photoUrls ?? [];
+  const coverPhoto = photos[0];
   return (
-    <Card className="flex flex-col hover:shadow-md transition-smooth group border-border hover:-translate-y-0.5">
+    <Card
+      className="flex flex-col hover:shadow-md transition-smooth group border-border hover:-translate-y-0.5 cursor-pointer overflow-hidden"
+      onClick={onClick}
+    >
+      {/* Cover with count badge */}
+      <div className="relative">
+        {coverPhoto ? (
+          <img
+            src={coverPhoto}
+            alt={book.title}
+            className="w-full h-40 object-cover rounded-t-lg"
+          />
+        ) : (
+          <div className="w-full h-40 bg-muted/40 flex flex-col items-center justify-center gap-1.5 rounded-t-lg">
+            <BookOpen className="h-8 w-8 text-muted-foreground/40" />
+            <span className="text-xs text-muted-foreground/50">No photo</span>
+          </div>
+        )}
+        {photos.length > 1 && (
+          <span className="absolute bottom-2 right-2 flex items-center gap-1 bg-background/80 backdrop-blur-sm text-foreground text-xs px-1.5 py-0.5 rounded-full border border-border font-medium">
+            <Images className="h-3 w-3" />
+            {photos.length}
+          </span>
+        )}
+      </div>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
@@ -75,7 +185,7 @@ function BookCard({
             {cond?.label ?? book.condition}
           </Badge>
           <span className="text-xs text-muted-foreground truncate">
-            by {(book.ownerId ?? "").slice(0, 10) || "unknown"}...
+            Listed by {book.ownerName ?? "Anonymous"}
           </span>
         </div>
         {book.location && (
@@ -84,28 +194,12 @@ function BookCard({
             <span className="truncate">{book.location}</span>
           </div>
         )}
-        {book.isAvailable && (
-          <Button
-            size="sm"
-            onClick={onRequest}
-            disabled={isRequesting}
-            className="mt-auto w-full"
-            data-ocid="dashboard.request_button"
-          >
-            {isRequesting ? (
-              <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" />
-                Requesting...
-              </>
-            ) : (
-              "Request to Borrow"
-            )}
-          </Button>
-        )}
       </CardContent>
     </Card>
   );
 }
+
+// ── Chat types ─────────────────────────────────────────────────────────────────
 
 interface ChatMessage {
   id: string;
@@ -113,14 +207,134 @@ interface ChatMessage {
   text: string;
 }
 
+// ── Book detail modal ────────────────────────────────────────────────────────
+
+function BookDetailModal({
+  book,
+  onClose,
+  onRequest,
+  isRequesting,
+}: {
+  book: BookSummary;
+  onClose: () => void;
+  onRequest: () => void;
+  isRequesting: boolean;
+}) {
+  const cond = CONDITION_STYLE[book.condition];
+  const photos = book.photoUrls ?? [];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+      onKeyDown={(e) => e.key === "Escape" && onClose()}
+      role="presentation"
+      data-ocid="dashboard.book_detail_modal"
+    >
+      <div
+        className="relative w-full max-w-lg bg-card rounded-2xl shadow-xl overflow-hidden border border-border max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute top-3 right-3 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-muted transition-colors"
+          data-ocid="dashboard.book_detail_close_button"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Photo section */}
+        {photos.length > 0 ? (
+          <div className="p-4 pb-0">
+            <PhotoGallery photos={photos} />
+          </div>
+        ) : (
+          <div className="w-full h-48 bg-muted/40 flex flex-col items-center justify-center gap-2">
+            <BookOpen className="h-12 w-12 text-muted-foreground/40" />
+            <span className="text-sm text-muted-foreground/50">
+              No photos available
+            </span>
+          </div>
+        )}
+
+        {/* Details */}
+        <div className="p-6 space-y-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="font-display font-bold text-xl text-foreground leading-tight">
+                {book.title}
+              </h2>
+              <p className="text-muted-foreground italic mt-0.5">
+                {book.author}
+              </p>
+            </div>
+            <Badge
+              variant="outline"
+              className={`shrink-0 ${
+                book.isAvailable
+                  ? "bg-accent/15 text-accent-foreground border-accent/35"
+                  : "bg-muted text-muted-foreground"
+              }`}
+            >
+              {book.isAvailable ? "Available" : "Borrowed"}
+            </Badge>
+          </div>
+
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className={`text-xs ${cond?.badge ?? ""}`}>
+              {cond?.label ?? book.condition}
+            </Badge>
+            <span className="text-sm text-muted-foreground">
+              Listed by {book.ownerName ?? "Anonymous"}
+            </span>
+          </div>
+
+          {book.location && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MapPin className="h-4 w-4 shrink-0 text-primary/60" />
+              <span>{book.location}</span>
+            </div>
+          )}
+
+          {book.isAvailable && (
+            <Button
+              className="w-full mt-2"
+              onClick={onRequest}
+              disabled={isRequesting}
+              data-ocid="dashboard.book_detail_request_button"
+            >
+              {isRequesting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Requesting...
+                </>
+              ) : (
+                "Request to Borrow"
+              )}
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function DashboardPage({ onNavigate }: DashboardPageProps) {
   const { data: books, isLoading } = useListAllBooks();
   const requestMutation = useSendBorrowRequest();
   const aiMutation = useGetAIBookRecommendation();
   const { data: myKeyConfigured } = useIsMyOpenAIConfigured();
+  const { data: userName } = useGetUserName();
   const [aiPrompt, setAiPrompt] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [requestingId, setRequestingId] = useState<bigint | null>(null);
+  const [selectedBook, setSelectedBook] = useState<BookSummary | null>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const handleRequest = async (book: BookSummary) => {
@@ -128,6 +342,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
     try {
       await requestMutation.mutateAsync(book.id);
       toast.success(`Borrow request sent for "${book.title}"!`);
+      setSelectedBook(null);
     } catch {
       toast.error("Failed to send request. Please try again.");
     } finally {
@@ -182,7 +397,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
       <section className="bg-card border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground">
-            Welcome to your
+            {userName ? `Welcome back, ${userName}` : "Welcome to your"}
           </h1>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-primary mt-0.5">
             Community Library
@@ -208,8 +423,9 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
                   AI Librarian
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  Describe what you want to read — I'll find it from available
-                  books
+                  {userName
+                    ? `Hi ${userName}! Describe what you'd like to read.`
+                    : "Describe what you want to read — I'll find it from available books"}
                 </p>
               </div>
               {myKeyConfigured === false && (
@@ -360,7 +576,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <Skeleton key={i} className="h-52 w-full rounded-xl" />
+                <Skeleton key={i} className="h-72 w-full rounded-xl" />
               ))}
             </div>
           ) : books && books.length > 0 ? (
@@ -373,11 +589,7 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
                   key={String(book.id)}
                   data-ocid={`dashboard.book_card.${idx + 1}`}
                 >
-                  <BookCard
-                    book={book}
-                    onRequest={() => handleRequest(book)}
-                    isRequesting={requestingId === book.id}
-                  />
+                  <BookCard book={book} onClick={() => setSelectedBook(book)} />
                 </div>
               ))}
             </div>
@@ -399,6 +611,15 @@ export default function DashboardPage({ onNavigate }: DashboardPageProps) {
           )}
         </section>
       </div>
+
+      {selectedBook && (
+        <BookDetailModal
+          book={selectedBook}
+          onClose={() => setSelectedBook(null)}
+          onRequest={() => handleRequest(selectedBook)}
+          isRequesting={requestingId === selectedBook.id}
+        />
+      )}
     </div>
   );
 }

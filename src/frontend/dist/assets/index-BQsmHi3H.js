@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/DashboardPage-DV0S1dlo.js","assets/card-CetsEPfx.js","assets/send-BXLLlw5D.js","assets/map-pin-CjFysJy9.js","assets/MyBooksPage-BT-9MpAz.js","assets/index-DlXQCdZP.js","assets/RequestsPage-8RGQtOt4.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/DashboardPage-5LPxstRj.js","assets/card-c17eGIDo.js","assets/send-aGyzZJc7.js","assets/map-pin-B53w5ARx.js","assets/MyBooksPage-BCqor2xu.js","assets/index-DB1GMs67.js","assets/RequestsPage-DEAUaRsK.js"])))=>i.map(i=>d[i]);
 var __defProp = Object.defineProperty;
 var __typeError = (msg) => {
   throw TypeError(msg);
@@ -30308,6 +30308,823 @@ function useAuth() {
     logout: handleLogout
   };
 }
+const BookCondition$1 = Variant({
+  "new": Null,
+  "fair": Null,
+  "good": Null,
+  "poor": Null
+});
+const BookId = Nat;
+const Time = Int;
+const BookSummary = Record({
+  "id": BookId,
+  "title": Text,
+  "photoUrls": Vec(Text),
+  "ownerName": Opt(Text),
+  "ownerId": Principal2,
+  "createdAt": Time,
+  "author": Text,
+  "available": Bool,
+  "location": Text,
+  "condition": BookCondition$1
+});
+const UserRole = Variant({
+  "admin": Null,
+  "user": Null,
+  "guest": Null
+});
+const RequestId = Nat;
+const RequestStatus = Variant({
+  "pending": Null,
+  "approved": Null,
+  "rejected": Null
+});
+const BorrowRequestSummary = Record({
+  "id": RequestId,
+  "status": RequestStatus,
+  "ownerName": Opt(Text),
+  "borrowerId": Principal2,
+  "createdAt": Time,
+  "lenderId": Principal2,
+  "bookId": BookId,
+  "requesterName": Opt(Text)
+});
+const BookUpdateFields = Record({
+  "title": Opt(Text),
+  "photoUrls": Opt(Vec(Text)),
+  "author": Opt(Text),
+  "location": Opt(Text),
+  "condition": Opt(BookCondition$1)
+});
+Service({
+  "_initializeAccessControl": Func([], [], []),
+  "addBook": Func(
+    [Text, Text, BookCondition$1, Text, Vec(Text)],
+    [BookSummary],
+    []
+  ),
+  "assignCallerUserRole": Func([Principal2, UserRole], [], []),
+  "deleteBook": Func([BookId], [Bool], []),
+  "getAIBookRecommendation": Func([Text], [Text], []),
+  "getCallerUserRole": Func([], [UserRole], ["query"]),
+  "getUserName": Func([], [Opt(Text)], ["query"]),
+  "getUserNameByPrincipal": Func(
+    [Principal2],
+    [Opt(Text)],
+    ["query"]
+  ),
+  "isCallerAdmin": Func([], [Bool], ["query"]),
+  "isMyOpenAIConfigured": Func([], [Bool], ["query"]),
+  "isOpenAIConfigured": Func([], [Bool], ["query"]),
+  "listAllBooks": Func([], [Vec(BookSummary)], ["query"]),
+  "listMyBooks": Func([], [Vec(BookSummary)], ["query"]),
+  "listMyReceivedRequests": Func(
+    [],
+    [Vec(BorrowRequestSummary)],
+    ["query"]
+  ),
+  "listMySentRequests": Func(
+    [],
+    [Vec(BorrowRequestSummary)],
+    ["query"]
+  ),
+  "respondToBorrowRequest": Func([RequestId, Bool], [Bool], []),
+  "sendBorrowRequest": Func([BookId], [Opt(BorrowRequestSummary)], []),
+  "setMyOpenAIApiKey": Func([Text], [], []),
+  "setUserName": Func([Text], [], []),
+  "updateBook": Func([BookId, BookUpdateFields], [Bool], [])
+});
+const idlFactory = ({ IDL: IDL2 }) => {
+  const BookCondition2 = IDL2.Variant({
+    "new": IDL2.Null,
+    "fair": IDL2.Null,
+    "good": IDL2.Null,
+    "poor": IDL2.Null
+  });
+  const BookId2 = IDL2.Nat;
+  const Time2 = IDL2.Int;
+  const BookSummary2 = IDL2.Record({
+    "id": BookId2,
+    "title": IDL2.Text,
+    "photoUrls": IDL2.Vec(IDL2.Text),
+    "ownerName": IDL2.Opt(IDL2.Text),
+    "ownerId": IDL2.Principal,
+    "createdAt": Time2,
+    "author": IDL2.Text,
+    "available": IDL2.Bool,
+    "location": IDL2.Text,
+    "condition": BookCondition2
+  });
+  const UserRole2 = IDL2.Variant({
+    "admin": IDL2.Null,
+    "user": IDL2.Null,
+    "guest": IDL2.Null
+  });
+  const RequestId2 = IDL2.Nat;
+  const RequestStatus2 = IDL2.Variant({
+    "pending": IDL2.Null,
+    "approved": IDL2.Null,
+    "rejected": IDL2.Null
+  });
+  const BorrowRequestSummary2 = IDL2.Record({
+    "id": RequestId2,
+    "status": RequestStatus2,
+    "ownerName": IDL2.Opt(IDL2.Text),
+    "borrowerId": IDL2.Principal,
+    "createdAt": Time2,
+    "lenderId": IDL2.Principal,
+    "bookId": BookId2,
+    "requesterName": IDL2.Opt(IDL2.Text)
+  });
+  const BookUpdateFields2 = IDL2.Record({
+    "title": IDL2.Opt(IDL2.Text),
+    "photoUrls": IDL2.Opt(IDL2.Vec(IDL2.Text)),
+    "author": IDL2.Opt(IDL2.Text),
+    "location": IDL2.Opt(IDL2.Text),
+    "condition": IDL2.Opt(BookCondition2)
+  });
+  return IDL2.Service({
+    "_initializeAccessControl": IDL2.Func([], [], []),
+    "addBook": IDL2.Func(
+      [IDL2.Text, IDL2.Text, BookCondition2, IDL2.Text, IDL2.Vec(IDL2.Text)],
+      [BookSummary2],
+      []
+    ),
+    "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
+    "deleteBook": IDL2.Func([BookId2], [IDL2.Bool], []),
+    "getAIBookRecommendation": IDL2.Func([IDL2.Text], [IDL2.Text], []),
+    "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
+    "getUserName": IDL2.Func([], [IDL2.Opt(IDL2.Text)], ["query"]),
+    "getUserNameByPrincipal": IDL2.Func(
+      [IDL2.Principal],
+      [IDL2.Opt(IDL2.Text)],
+      ["query"]
+    ),
+    "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "isMyOpenAIConfigured": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "isOpenAIConfigured": IDL2.Func([], [IDL2.Bool], ["query"]),
+    "listAllBooks": IDL2.Func([], [IDL2.Vec(BookSummary2)], ["query"]),
+    "listMyBooks": IDL2.Func([], [IDL2.Vec(BookSummary2)], ["query"]),
+    "listMyReceivedRequests": IDL2.Func(
+      [],
+      [IDL2.Vec(BorrowRequestSummary2)],
+      ["query"]
+    ),
+    "listMySentRequests": IDL2.Func(
+      [],
+      [IDL2.Vec(BorrowRequestSummary2)],
+      ["query"]
+    ),
+    "respondToBorrowRequest": IDL2.Func([RequestId2, IDL2.Bool], [IDL2.Bool], []),
+    "sendBorrowRequest": IDL2.Func(
+      [BookId2],
+      [IDL2.Opt(BorrowRequestSummary2)],
+      []
+    ),
+    "setMyOpenAIApiKey": IDL2.Func([IDL2.Text], [], []),
+    "setUserName": IDL2.Func([IDL2.Text], [], []),
+    "updateBook": IDL2.Func([BookId2, BookUpdateFields2], [IDL2.Bool], [])
+  });
+};
+function candid_some(value) {
+  return [
+    value
+  ];
+}
+function candid_none() {
+  return [];
+}
+function record_opt_to_undefined(arg) {
+  return arg == null ? void 0 : arg;
+}
+var BookCondition = /* @__PURE__ */ ((BookCondition2) => {
+  BookCondition2["new_"] = "new";
+  BookCondition2["fair"] = "fair";
+  BookCondition2["good"] = "good";
+  BookCondition2["poor"] = "poor";
+  return BookCondition2;
+})(BookCondition || {});
+class Backend {
+  constructor(actor, _uploadFile, _downloadFile, processError2) {
+    this.actor = actor;
+    this._uploadFile = _uploadFile;
+    this._downloadFile = _downloadFile;
+    this.processError = processError2;
+  }
+  async _initializeAccessControl() {
+    if (this.processError) {
+      try {
+        const result = await this.actor._initializeAccessControl();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor._initializeAccessControl();
+      return result;
+    }
+  }
+  async addBook(arg0, arg1, arg2, arg3, arg4) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.addBook(arg0, arg1, to_candid_BookCondition_n1(this._uploadFile, this._downloadFile, arg2), arg3, arg4);
+        return from_candid_BookSummary_n3(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.addBook(arg0, arg1, to_candid_BookCondition_n1(this._uploadFile, this._downloadFile, arg2), arg3, arg4);
+      return from_candid_BookSummary_n3(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async assignCallerUserRole(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n8(this._uploadFile, this._downloadFile, arg1));
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n8(this._uploadFile, this._downloadFile, arg1));
+      return result;
+    }
+  }
+  async deleteBook(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.deleteBook(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.deleteBook(arg0);
+      return result;
+    }
+  }
+  async getAIBookRecommendation(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getAIBookRecommendation(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getAIBookRecommendation(arg0);
+      return result;
+    }
+  }
+  async getCallerUserRole() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getCallerUserRole();
+        return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getCallerUserRole();
+      return from_candid_UserRole_n10(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getUserName() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getUserName();
+        return from_candid_opt_n5(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getUserName();
+      return from_candid_opt_n5(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async getUserNameByPrincipal(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.getUserNameByPrincipal(arg0);
+        return from_candid_opt_n5(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.getUserNameByPrincipal(arg0);
+      return from_candid_opt_n5(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async isCallerAdmin() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.isCallerAdmin();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.isCallerAdmin();
+      return result;
+    }
+  }
+  async isMyOpenAIConfigured() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.isMyOpenAIConfigured();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.isMyOpenAIConfigured();
+      return result;
+    }
+  }
+  async isOpenAIConfigured() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.isOpenAIConfigured();
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.isOpenAIConfigured();
+      return result;
+    }
+  }
+  async listAllBooks() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listAllBooks();
+        return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listAllBooks();
+      return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listMyBooks() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listMyBooks();
+        return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listMyBooks();
+      return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listMyReceivedRequests() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listMyReceivedRequests();
+        return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listMyReceivedRequests();
+      return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async listMySentRequests() {
+    if (this.processError) {
+      try {
+        const result = await this.actor.listMySentRequests();
+        return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.listMySentRequests();
+      return from_candid_vec_n13(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async respondToBorrowRequest(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.respondToBorrowRequest(arg0, arg1);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.respondToBorrowRequest(arg0, arg1);
+      return result;
+    }
+  }
+  async sendBorrowRequest(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.sendBorrowRequest(arg0);
+        return from_candid_opt_n18(this._uploadFile, this._downloadFile, result);
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.sendBorrowRequest(arg0);
+      return from_candid_opt_n18(this._uploadFile, this._downloadFile, result);
+    }
+  }
+  async setMyOpenAIApiKey(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setMyOpenAIApiKey(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setMyOpenAIApiKey(arg0);
+      return result;
+    }
+  }
+  async setUserName(arg0) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.setUserName(arg0);
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.setUserName(arg0);
+      return result;
+    }
+  }
+  async updateBook(arg0, arg1) {
+    if (this.processError) {
+      try {
+        const result = await this.actor.updateBook(arg0, to_candid_BookUpdateFields_n19(this._uploadFile, this._downloadFile, arg1));
+        return result;
+      } catch (e) {
+        this.processError(e);
+        throw new Error("unreachable");
+      }
+    } else {
+      const result = await this.actor.updateBook(arg0, to_candid_BookUpdateFields_n19(this._uploadFile, this._downloadFile, arg1));
+      return result;
+    }
+  }
+}
+function from_candid_BookCondition_n6(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n7(_uploadFile, _downloadFile, value);
+}
+function from_candid_BookSummary_n3(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_BorrowRequestSummary_n14(_uploadFile, _downloadFile, value) {
+  return from_candid_record_n15(_uploadFile, _downloadFile, value);
+}
+function from_candid_RequestStatus_n16(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n17(_uploadFile, _downloadFile, value);
+}
+function from_candid_UserRole_n10(_uploadFile, _downloadFile, value) {
+  return from_candid_variant_n11(_uploadFile, _downloadFile, value);
+}
+function from_candid_opt_n18(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : from_candid_BorrowRequestSummary_n14(_uploadFile, _downloadFile, value[0]);
+}
+function from_candid_opt_n5(_uploadFile, _downloadFile, value) {
+  return value.length === 0 ? null : value[0];
+}
+function from_candid_record_n15(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    status: from_candid_RequestStatus_n16(_uploadFile, _downloadFile, value.status),
+    ownerName: record_opt_to_undefined(from_candid_opt_n5(_uploadFile, _downloadFile, value.ownerName)),
+    borrowerId: value.borrowerId,
+    createdAt: value.createdAt,
+    lenderId: value.lenderId,
+    bookId: value.bookId,
+    requesterName: record_opt_to_undefined(from_candid_opt_n5(_uploadFile, _downloadFile, value.requesterName))
+  };
+}
+function from_candid_record_n4(_uploadFile, _downloadFile, value) {
+  return {
+    id: value.id,
+    title: value.title,
+    photoUrls: value.photoUrls,
+    ownerName: record_opt_to_undefined(from_candid_opt_n5(_uploadFile, _downloadFile, value.ownerName)),
+    ownerId: value.ownerId,
+    createdAt: value.createdAt,
+    author: value.author,
+    available: value.available,
+    location: value.location,
+    condition: from_candid_BookCondition_n6(_uploadFile, _downloadFile, value.condition)
+  };
+}
+function from_candid_variant_n11(_uploadFile, _downloadFile, value) {
+  return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
+}
+function from_candid_variant_n17(_uploadFile, _downloadFile, value) {
+  return "pending" in value ? "pending" : "approved" in value ? "approved" : "rejected" in value ? "rejected" : value;
+}
+function from_candid_variant_n7(_uploadFile, _downloadFile, value) {
+  return "new" in value ? BookCondition.new : "fair" in value ? "fair" : "good" in value ? "good" : "poor" in value ? "poor" : value;
+}
+function from_candid_vec_n12(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_BookSummary_n3(_uploadFile, _downloadFile, x3));
+}
+function from_candid_vec_n13(_uploadFile, _downloadFile, value) {
+  return value.map((x3) => from_candid_BorrowRequestSummary_n14(_uploadFile, _downloadFile, x3));
+}
+function to_candid_BookCondition_n1(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n2(_uploadFile, _downloadFile, value);
+}
+function to_candid_BookUpdateFields_n19(_uploadFile, _downloadFile, value) {
+  return to_candid_record_n20(_uploadFile, _downloadFile, value);
+}
+function to_candid_UserRole_n8(_uploadFile, _downloadFile, value) {
+  return to_candid_variant_n9(_uploadFile, _downloadFile, value);
+}
+function to_candid_record_n20(_uploadFile, _downloadFile, value) {
+  return {
+    title: value.title ? candid_some(value.title) : candid_none(),
+    photoUrls: value.photoUrls ? candid_some(value.photoUrls) : candid_none(),
+    author: value.author ? candid_some(value.author) : candid_none(),
+    location: value.location ? candid_some(value.location) : candid_none(),
+    condition: value.condition ? candid_some(to_candid_BookCondition_n1(_uploadFile, _downloadFile, value.condition)) : candid_none()
+  };
+}
+function to_candid_variant_n2(_uploadFile, _downloadFile, value) {
+  return value == BookCondition.new ? {
+    new_: null
+  } : value == "fair" ? {
+    fair: null
+  } : value == "good" ? {
+    good: null
+  } : value == "poor" ? {
+    poor: null
+  } : value;
+}
+function to_candid_variant_n9(_uploadFile, _downloadFile, value) {
+  return value == "admin" ? {
+    admin: null
+  } : value == "user" ? {
+    user: null
+  } : value == "guest" ? {
+    guest: null
+  } : value;
+}
+function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
+  const agent = options.agent || HttpAgent.createSync({
+    ...options.agentOptions
+  });
+  if (options.agent && options.agentOptions) {
+    console.warn("Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.");
+  }
+  const actor = Actor.createActor(idlFactory, {
+    agent,
+    canisterId,
+    ...options.actorOptions
+  });
+  return new Backend(actor, _uploadFile, _downloadFile, options.processError);
+}
+function useBackendActor() {
+  return useActor(createActor);
+}
+function useIsMyOpenAIConfigured() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["isMyOpenAIConfigured"],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isMyOpenAIConfigured();
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useSetMyOpenAIApiKey() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (key) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.setMyOpenAIApiKey(key);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["isMyOpenAIConfigured"] });
+    }
+  });
+}
+function useGetUserName() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["userName"],
+    queryFn: async () => {
+      if (!actor) return null;
+      return actor.getUserName();
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useSetUserName() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (name) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.setUserName(name);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["userName"] });
+      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function mapBookSummary(b2) {
+  var _a3;
+  return {
+    id: b2.id,
+    title: b2.title,
+    author: b2.author,
+    condition: b2.condition,
+    isAvailable: b2.available,
+    ownerId: ((_a3 = b2.ownerId) == null ? void 0 : _a3.toString()) ?? "",
+    ownerName: b2.ownerName ?? null,
+    location: b2.location,
+    photoUrls: b2.photoUrls ?? []
+  };
+}
+function mapRequestSummary(r2) {
+  var _a3, _b3;
+  return {
+    id: r2.id,
+    bookId: r2.bookId,
+    borrowerId: ((_a3 = r2.borrowerId) == null ? void 0 : _a3.toString()) ?? "",
+    lenderId: ((_b3 = r2.lenderId) == null ? void 0 : _b3.toString()) ?? "",
+    status: r2.status,
+    createdAt: r2.createdAt,
+    requesterName: r2.requesterName ?? null,
+    ownerName: r2.ownerName ?? null
+  };
+}
+function useListAllBooks() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["allBooks"],
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listAllBooks();
+      return result.map(mapBookSummary);
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useListMyBooks() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["myBooks"],
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listMyBooks();
+      return result.map(mapBookSummary);
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useAddBook() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      var _a3;
+      if (!actor) throw new Error("Actor not available");
+      return actor.addBook(
+        params.title,
+        params.author,
+        params.condition,
+        ((_a3 = params.location) == null ? void 0 : _a3.trim()) ?? "",
+        params.photoUrls ?? []
+      );
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function useDeleteBook() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (bookId) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.deleteBook(bookId);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function useUpdateBook() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.updateBook(
+        params.bookId,
+        params.fields
+      );
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function useSendBorrowRequest() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (bookId) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.sendBorrowRequest(bookId);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["sentRequests"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function useRespondToBorrowRequest() {
+  const { actor } = useBackendActor();
+  const queryClient2 = useQueryClient();
+  return useMutation({
+    mutationFn: async (params) => {
+      if (!actor) throw new Error("Actor not available");
+      return actor.respondToBorrowRequest(params.requestId, params.approve);
+    },
+    onSuccess: () => {
+      queryClient2.invalidateQueries({ queryKey: ["receivedRequests"] });
+      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
+      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
+    }
+  });
+}
+function useListMyReceivedRequests() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["receivedRequests"],
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listMyReceivedRequests();
+      return result.map(mapRequestSummary);
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useListMySentRequests() {
+  const { actor, isFetching } = useBackendActor();
+  return useQuery({
+    queryKey: ["sentRequests"],
+    queryFn: async () => {
+      if (!actor) return [];
+      const result = await actor.listMySentRequests();
+      return result.map(mapRequestSummary);
+    },
+    enabled: !!actor && !isFetching
+  });
+}
+function useGetAIBookRecommendation() {
+  const { actor } = useBackendActor();
+  return useMutation({
+    mutationFn: async (prompt) => {
+      if (!actor) throw new Error("Actor not available");
+      const message = await actor.getAIBookRecommendation(prompt);
+      return { message, suggestedBookIds: [] };
+    }
+  });
+}
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30413,13 +31230,24 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$f = [
+const __iconNode$g = [
   ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
   ["path", { d: "M4 7h16", key: "6tx8e3" }],
   ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
   ["path", { d: "M20 17H4", key: "h6l3hr" }]
 ];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$f);
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$g);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$f = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30427,17 +31255,6 @@ const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$f);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$e = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
-];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$e);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$d = [
   ["path", { d: "M10 2v8l3-3 3 3V2", key: "sqw3rj" }],
   [
     "path",
@@ -30447,14 +31264,14 @@ const __iconNode$d = [
     }
   ]
 ];
-const BookMarked = createLucideIcon("book-marked", __iconNode$d);
+const BookMarked = createLucideIcon("book-marked", __iconNode$e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$c = [
+const __iconNode$d = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -30464,14 +31281,14 @@ const __iconNode$c = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$c);
+const BookOpen = createLucideIcon("book-open", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$b = [
+const __iconNode$c = [
   ["path", { d: "M12 13V7", key: "h0r20n" }],
   [
     "path",
@@ -30482,7 +31299,18 @@ const __iconNode$b = [
   ],
   ["path", { d: "m9 10 3-3 3 3", key: "11gsxs" }]
 ];
-const BookUp = createLucideIcon("book-up", __iconNode$b);
+const BookUp = createLucideIcon("book-up", __iconNode$c);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$b = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30491,9 +31319,10 @@ const BookUp = createLucideIcon("book-up", __iconNode$b);
  */
 const __iconNode$a = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
+  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$a);
+const CircleX = createLucideIcon("circle-x", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30501,18 +31330,6 @@ const CircleCheck = createLucideIcon("circle-check", __iconNode$a);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$9 = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
-  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
-];
-const CircleX = createLucideIcon("circle-x", __iconNode$9);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$8 = [
   ["path", { d: "M11 12h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 14", key: "1j4xps" }],
   [
     "path",
@@ -30523,27 +31340,39 @@ const __iconNode$8 = [
   ],
   ["path", { d: "m2 13 6 6", key: "16e5sb" }]
 ];
-const HandHelping = createLucideIcon("hand-helping", __iconNode$8);
+const HandHelping = createLucideIcon("hand-helping", __iconNode$9);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$7 = [
+const __iconNode$8 = [
   ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
   ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
   ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
 ];
-const Key = createLucideIcon("key", __iconNode$7);
+const Key = createLucideIcon("key", __iconNode$8);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$6 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$6);
+const __iconNode$7 = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$7);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$6 = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$6);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30551,11 +31380,11 @@ const LoaderCircle = createLucideIcon("loader-circle", __iconNode$6);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$5 = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$5);
+const Menu = createLucideIcon("menu", __iconNode$5);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30563,18 +31392,6 @@ const LogOut = createLucideIcon("log-out", __iconNode$5);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$4 = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
-];
-const Menu = createLucideIcon("menu", __iconNode$4);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$3 = [
   [
     "path",
     {
@@ -30584,14 +31401,14 @@ const __iconNode$3 = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Settings = createLucideIcon("settings", __iconNode$3);
+const Settings = createLucideIcon("settings", __iconNode$4);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$2 = [
+const __iconNode$3 = [
   [
     "path",
     {
@@ -30604,7 +31421,18 @@ const __iconNode$2 = [
   ["path", { d: "M4 17v2", key: "vumght" }],
   ["path", { d: "M5 18H3", key: "zchphs" }]
 ];
-const Sparkles = createLucideIcon("sparkles", __iconNode$2);
+const Sparkles = createLucideIcon("sparkles", __iconNode$3);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$2 = [
+  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
+  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
+];
+const User = createLucideIcon("user", __iconNode$2);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30642,7 +31470,9 @@ function Layout({
 }) {
   const { logout, principalText } = useAuth();
   const handleLogout = onLogout ?? logout;
+  const { data: userName } = useGetUserName();
   const [mobileMenuOpen, setMobileMenuOpen] = reactExports.useState(false);
+  const displayName = (userName == null ? void 0 : userName.trim()) || "Anonymous";
   const shortPrincipal = principalText ? `${principalText.slice(0, 5)}...${principalText.slice(-4)}` : "";
   const handleNavigate = (route) => {
     onNavigate(route);
@@ -30660,7 +31490,7 @@ function Layout({
             "data-ocid": "nav.logo_button",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-8 w-8 rounded-lg bg-primary flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "h-4 w-4 text-primary-foreground" }) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-xl text-foreground tracking-tight hidden sm:block", children: "OpenShelf" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-display font-bold text-xl text-foreground tracking-tight hidden sm:block", children: "BookShare" })
             ]
           }
         ),
@@ -30702,8 +31532,13 @@ function Layout({
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/60", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: "U" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground font-mono", children: shortPrincipal })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: displayName.charAt(0).toUpperCase() }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-foreground font-medium max-w-[120px] truncate", children: displayName }),
+            shortPrincipal && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] text-muted-foreground font-mono hidden lg:block", children: [
+              "(",
+              shortPrincipal,
+              ")"
+            ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             Button,
@@ -30763,8 +31598,8 @@ function Layout({
         /* @__PURE__ */ jsxRuntimeExports.jsx(Separator, { className: "my-2" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between px-3 py-2", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: "U" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground font-mono", children: shortPrincipal })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: displayName.charAt(0).toUpperCase() }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-foreground font-medium max-w-[100px] truncate", children: displayName })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "button",
@@ -30800,6 +31635,429 @@ function Layout({
       )
     ] }) }) })
   ] });
+}
+function Input({ className, type, ...props }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "input",
+    {
+      type,
+      "data-slot": "input",
+      className: cn(
+        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        className
+      ),
+      ...props
+    }
+  );
+}
+var NAME = "Label";
+var Label$1 = reactExports.forwardRef((props, forwardedRef) => {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Primitive.label,
+    {
+      ...props,
+      ref: forwardedRef,
+      onMouseDown: (event) => {
+        var _a3;
+        const target = event.target;
+        if (target.closest("button, input, select, textarea")) return;
+        (_a3 = props.onMouseDown) == null ? void 0 : _a3.call(props, event);
+        if (!event.defaultPrevented && event.detail > 1) event.preventDefault();
+      }
+    }
+  );
+});
+Label$1.displayName = NAME;
+var Root = Label$1;
+function Label({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Root,
+    {
+      "data-slot": "label",
+      className: cn(
+        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+        className
+      ),
+      ...props
+    }
+  );
+}
+var jt = (n) => {
+  switch (n) {
+    case "success":
+      return ee;
+    case "info":
+      return ae;
+    case "warning":
+      return oe;
+    case "error":
+      return se;
+    default:
+      return null;
+  }
+}, te = Array(12).fill(0), Yt = ({ visible: n, className: e }) => React2.createElement("div", { className: ["sonner-loading-wrapper", e].filter(Boolean).join(" "), "data-visible": n }, React2.createElement("div", { className: "sonner-spinner" }, te.map((t, a2) => React2.createElement("div", { className: "sonner-loading-bar", key: `spinner-bar-${a2}` })))), ee = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", clipRule: "evenodd" })), oe = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z", clipRule: "evenodd" })), ae = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z", clipRule: "evenodd" })), se = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z", clipRule: "evenodd" })), Ot = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, React2.createElement("line", { x1: "18", y1: "6", x2: "6", y2: "18" }), React2.createElement("line", { x1: "6", y1: "6", x2: "18", y2: "18" }));
+var Ft = () => {
+  let [n, e] = React2.useState(document.hidden);
+  return React2.useEffect(() => {
+    let t = () => {
+      e(document.hidden);
+    };
+    return document.addEventListener("visibilitychange", t), () => window.removeEventListener("visibilitychange", t);
+  }, []), n;
+};
+var bt = 1, yt = class {
+  constructor() {
+    this.subscribe = (e) => (this.subscribers.push(e), () => {
+      let t = this.subscribers.indexOf(e);
+      this.subscribers.splice(t, 1);
+    });
+    this.publish = (e) => {
+      this.subscribers.forEach((t) => t(e));
+    };
+    this.addToast = (e) => {
+      this.publish(e), this.toasts = [...this.toasts, e];
+    };
+    this.create = (e) => {
+      var S2;
+      let { message: t, ...a2 } = e, u = typeof (e == null ? void 0 : e.id) == "number" || ((S2 = e.id) == null ? void 0 : S2.length) > 0 ? e.id : bt++, f = this.toasts.find((g2) => g2.id === u), w2 = e.dismissible === void 0 ? true : e.dismissible;
+      return this.dismissedToasts.has(u) && this.dismissedToasts.delete(u), f ? this.toasts = this.toasts.map((g2) => g2.id === u ? (this.publish({ ...g2, ...e, id: u, title: t }), { ...g2, ...e, id: u, dismissible: w2, title: t }) : g2) : this.addToast({ title: t, ...a2, dismissible: w2, id: u }), u;
+    };
+    this.dismiss = (e) => (this.dismissedToasts.add(e), e || this.toasts.forEach((t) => {
+      this.subscribers.forEach((a2) => a2({ id: t.id, dismiss: true }));
+    }), this.subscribers.forEach((t) => t({ id: e, dismiss: true })), e);
+    this.message = (e, t) => this.create({ ...t, message: e });
+    this.error = (e, t) => this.create({ ...t, message: e, type: "error" });
+    this.success = (e, t) => this.create({ ...t, type: "success", message: e });
+    this.info = (e, t) => this.create({ ...t, type: "info", message: e });
+    this.warning = (e, t) => this.create({ ...t, type: "warning", message: e });
+    this.loading = (e, t) => this.create({ ...t, type: "loading", message: e });
+    this.promise = (e, t) => {
+      if (!t) return;
+      let a2;
+      t.loading !== void 0 && (a2 = this.create({ ...t, promise: e, type: "loading", message: t.loading, description: typeof t.description != "function" ? t.description : void 0 }));
+      let u = e instanceof Promise ? e : e(), f = a2 !== void 0, w2, S2 = u.then(async (i) => {
+        if (w2 = ["resolve", i], React2.isValidElement(i)) f = false, this.create({ id: a2, type: "default", message: i });
+        else if (ie(i) && !i.ok) {
+          f = false;
+          let T2 = typeof t.error == "function" ? await t.error(`HTTP error! status: ${i.status}`) : t.error, F2 = typeof t.description == "function" ? await t.description(`HTTP error! status: ${i.status}`) : t.description;
+          this.create({ id: a2, type: "error", message: T2, description: F2 });
+        } else if (t.success !== void 0) {
+          f = false;
+          let T2 = typeof t.success == "function" ? await t.success(i) : t.success, F2 = typeof t.description == "function" ? await t.description(i) : t.description;
+          this.create({ id: a2, type: "success", message: T2, description: F2 });
+        }
+      }).catch(async (i) => {
+        if (w2 = ["reject", i], t.error !== void 0) {
+          f = false;
+          let D = typeof t.error == "function" ? await t.error(i) : t.error, T2 = typeof t.description == "function" ? await t.description(i) : t.description;
+          this.create({ id: a2, type: "error", message: D, description: T2 });
+        }
+      }).finally(() => {
+        var i;
+        f && (this.dismiss(a2), a2 = void 0), (i = t.finally) == null || i.call(t);
+      }), g2 = () => new Promise((i, D) => S2.then(() => w2[0] === "reject" ? D(w2[1]) : i(w2[1])).catch(D));
+      return typeof a2 != "string" && typeof a2 != "number" ? { unwrap: g2 } : Object.assign(a2, { unwrap: g2 });
+    };
+    this.custom = (e, t) => {
+      let a2 = (t == null ? void 0 : t.id) || bt++;
+      return this.create({ jsx: e(a2), id: a2, ...t }), a2;
+    };
+    this.getActiveToasts = () => this.toasts.filter((e) => !this.dismissedToasts.has(e.id));
+    this.subscribers = [], this.toasts = [], this.dismissedToasts = /* @__PURE__ */ new Set();
+  }
+}, v = new yt(), ne = (n, e) => {
+  let t = (e == null ? void 0 : e.id) || bt++;
+  return v.addToast({ title: n, ...e, id: t }), t;
+}, ie = (n) => n && typeof n == "object" && "ok" in n && typeof n.ok == "boolean" && "status" in n && typeof n.status == "number", le = ne, ce = () => v.toasts, de = () => v.getActiveToasts(), ue = Object.assign(le, { success: v.success, info: v.info, warning: v.warning, error: v.error, custom: v.custom, message: v.message, promise: v.promise, dismiss: v.dismiss, loading: v.loading }, { getHistory: ce, getToasts: de });
+function wt(n, { insertAt: e } = {}) {
+  if (typeof document == "undefined") return;
+  let t = document.head || document.getElementsByTagName("head")[0], a2 = document.createElement("style");
+  a2.type = "text/css", e === "top" && t.firstChild ? t.insertBefore(a2, t.firstChild) : t.appendChild(a2), a2.styleSheet ? a2.styleSheet.cssText = n : a2.appendChild(document.createTextNode(n));
+}
+wt(`:where(html[dir="ltr"]),:where([data-sonner-toaster][dir="ltr"]){--toast-icon-margin-start: -3px;--toast-icon-margin-end: 4px;--toast-svg-margin-start: -1px;--toast-svg-margin-end: 0px;--toast-button-margin-start: auto;--toast-button-margin-end: 0;--toast-close-button-start: 0;--toast-close-button-end: unset;--toast-close-button-transform: translate(-35%, -35%)}:where(html[dir="rtl"]),:where([data-sonner-toaster][dir="rtl"]){--toast-icon-margin-start: 4px;--toast-icon-margin-end: -3px;--toast-svg-margin-start: 0px;--toast-svg-margin-end: -1px;--toast-button-margin-start: 0;--toast-button-margin-end: auto;--toast-close-button-start: unset;--toast-close-button-end: 0;--toast-close-button-transform: translate(35%, -35%)}:where([data-sonner-toaster]){position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1: hsl(0, 0%, 99%);--gray2: hsl(0, 0%, 97.3%);--gray3: hsl(0, 0%, 95.1%);--gray4: hsl(0, 0%, 93%);--gray5: hsl(0, 0%, 90.9%);--gray6: hsl(0, 0%, 88.7%);--gray7: hsl(0, 0%, 85.8%);--gray8: hsl(0, 0%, 78%);--gray9: hsl(0, 0%, 56.1%);--gray10: hsl(0, 0%, 52.3%);--gray11: hsl(0, 0%, 43.5%);--gray12: hsl(0, 0%, 9%);--border-radius: 8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:none;z-index:999999999;transition:transform .4s ease}:where([data-sonner-toaster][data-lifted="true"]){transform:translateY(-10px)}@media (hover: none) and (pointer: coarse){:where([data-sonner-toaster][data-lifted="true"]){transform:none}}:where([data-sonner-toaster][data-x-position="right"]){right:var(--offset-right)}:where([data-sonner-toaster][data-x-position="left"]){left:var(--offset-left)}:where([data-sonner-toaster][data-x-position="center"]){left:50%;transform:translate(-50%)}:where([data-sonner-toaster][data-y-position="top"]){top:var(--offset-top)}:where([data-sonner-toaster][data-y-position="bottom"]){bottom:var(--offset-bottom)}:where([data-sonner-toast]){--y: translateY(100%);--lift-amount: calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);filter:blur(0);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:none;overflow-wrap:anywhere}:where([data-sonner-toast][data-styled="true"]){padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px #0000001a;width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}:where([data-sonner-toast]:focus-visible){box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast][data-y-position="top"]){top:0;--y: translateY(-100%);--lift: 1;--lift-amount: calc(1 * var(--gap))}:where([data-sonner-toast][data-y-position="bottom"]){bottom:0;--y: translateY(100%);--lift: -1;--lift-amount: calc(var(--lift) * var(--gap))}:where([data-sonner-toast]) :where([data-description]){font-weight:400;line-height:1.4;color:inherit}:where([data-sonner-toast]) :where([data-title]){font-weight:500;line-height:1.5;color:inherit}:where([data-sonner-toast]) :where([data-icon]){display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}:where([data-sonner-toast][data-promise="true"]) :where([data-icon])>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}:where([data-sonner-toast]) :where([data-icon])>*{flex-shrink:0}:where([data-sonner-toast]) :where([data-icon]) svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}:where([data-sonner-toast]) :where([data-content]){display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;cursor:pointer;outline:none;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}:where([data-sonner-toast]) :where([data-button]):focus-visible{box-shadow:0 0 0 2px #0006}:where([data-sonner-toast]) :where([data-button]):first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}:where([data-sonner-toast]) :where([data-cancel]){color:var(--normal-text);background:rgba(0,0,0,.08)}:where([data-sonner-toast][data-theme="dark"]) :where([data-cancel]){background:rgba(255,255,255,.3)}:where([data-sonner-toast]) :where([data-close-button]){position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast] [data-close-button]{background:var(--gray1)}:where([data-sonner-toast]) :where([data-close-button]):focus-visible{box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast]) :where([data-disabled="true"]){cursor:not-allowed}:where([data-sonner-toast]):hover :where([data-close-button]):hover{background:var(--gray2);border-color:var(--gray5)}:where([data-sonner-toast][data-swiping="true"]):before{content:"";position:absolute;left:-50%;right:-50%;height:100%;z-index:-1}:where([data-sonner-toast][data-y-position="top"][data-swiping="true"]):before{bottom:50%;transform:scaleY(3) translateY(50%)}:where([data-sonner-toast][data-y-position="bottom"][data-swiping="true"]):before{top:50%;transform:scaleY(3) translateY(-50%)}:where([data-sonner-toast][data-swiping="false"][data-removed="true"]):before{content:"";position:absolute;inset:0;transform:scaleY(2)}:where([data-sonner-toast]):after{content:"";position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}:where([data-sonner-toast][data-mounted="true"]){--y: translateY(0);opacity:1}:where([data-sonner-toast][data-expanded="false"][data-front="false"]){--scale: var(--toasts-before) * .05 + 1;--y: translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}:where([data-sonner-toast])>*{transition:opacity .4s}:where([data-sonner-toast][data-expanded="false"][data-front="false"][data-styled="true"])>*{opacity:0}:where([data-sonner-toast][data-visible="false"]){opacity:0;pointer-events:none}:where([data-sonner-toast][data-mounted="true"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}:where([data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"]){--y: translateY(calc(var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="false"]){--y: translateY(40%);opacity:0;transition:transform .5s,opacity .2s}:where([data-sonner-toast][data-removed="true"][data-front="false"]):before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y, 0px)) translate(var(--swipe-amount-x, 0px));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width: 600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-theme=light]{--normal-bg: #fff;--normal-border: var(--gray4);--normal-text: var(--gray12);--success-bg: hsl(143, 85%, 96%);--success-border: hsl(145, 92%, 91%);--success-text: hsl(140, 100%, 27%);--info-bg: hsl(208, 100%, 97%);--info-border: hsl(221, 91%, 91%);--info-text: hsl(210, 92%, 45%);--warning-bg: hsl(49, 100%, 97%);--warning-border: hsl(49, 91%, 91%);--warning-text: hsl(31, 92%, 45%);--error-bg: hsl(359, 100%, 97%);--error-border: hsl(359, 100%, 94%);--error-text: hsl(360, 100%, 45%)}[data-sonner-toaster][data-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg: #000;--normal-border: hsl(0, 0%, 20%);--normal-text: var(--gray1)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg: #fff;--normal-border: var(--gray3);--normal-text: var(--gray12)}[data-sonner-toaster][data-theme=dark]{--normal-bg: #000;--normal-bg-hover: hsl(0, 0%, 12%);--normal-border: hsl(0, 0%, 20%);--normal-border-hover: hsl(0, 0%, 25%);--normal-text: var(--gray1);--success-bg: hsl(150, 100%, 6%);--success-border: hsl(147, 100%, 12%);--success-text: hsl(150, 86%, 65%);--info-bg: hsl(215, 100%, 6%);--info-border: hsl(223, 100%, 12%);--info-text: hsl(216, 87%, 65%);--warning-bg: hsl(64, 100%, 6%);--warning-border: hsl(60, 100%, 12%);--warning-text: hsl(46, 87%, 65%);--error-bg: hsl(358, 76%, 10%);--error-border: hsl(357, 89%, 16%);--error-text: hsl(358, 100%, 81%)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success],[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info],[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning],[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error],[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size: 16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:nth-child(1){animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}to{opacity:.15}}@media (prefers-reduced-motion){[data-sonner-toast],[data-sonner-toast]>*,.sonner-loading-bar{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}
+`);
+function tt(n) {
+  return n.label !== void 0;
+}
+var pe = 3, me = "32px", ge = "16px", Wt = 4e3, he = 356, be = 14, ye = 20, we = 200;
+function M$1(...n) {
+  return n.filter(Boolean).join(" ");
+}
+function xe(n) {
+  let [e, t] = n.split("-"), a2 = [];
+  return e && a2.push(e), t && a2.push(t), a2;
+}
+var ve = (n) => {
+  var Dt, Pt, Nt, Bt, Ct, kt, It, Mt, Ht, At, Lt;
+  let { invert: e, toast: t, unstyled: a2, interacting: u, setHeights: f, visibleToasts: w2, heights: S2, index: g2, toasts: i, expanded: D, removeToast: T2, defaultRichColors: F2, closeButton: et2, style: ut2, cancelButtonStyle: ft2, actionButtonStyle: l, className: ot2 = "", descriptionClassName: at = "", duration: X2, position: st2, gap: pt, loadingIcon: rt, expandByDefault: B2, classNames: s2, icons: P2, closeButtonAriaLabel: nt2 = "Close toast", pauseWhenPageIsHidden: it2 } = n, [Y2, C2] = React2.useState(null), [lt, J2] = React2.useState(null), [W2, H2] = React2.useState(false), [A2, mt] = React2.useState(false), [L2, z2] = React2.useState(false), [ct2, d2] = React2.useState(false), [h2, y2] = React2.useState(false), [R2, j2] = React2.useState(0), [p2, _2] = React2.useState(0), O2 = React2.useRef(t.duration || X2 || Wt), G2 = React2.useRef(null), k2 = React2.useRef(null), Vt = g2 === 0, Ut = g2 + 1 <= w2, N2 = t.type, V2 = t.dismissible !== false, Kt = t.className || "", Xt = t.descriptionClassName || "", dt2 = React2.useMemo(() => S2.findIndex((r2) => r2.toastId === t.id) || 0, [S2, t.id]), Jt = React2.useMemo(() => {
+    var r2;
+    return (r2 = t.closeButton) != null ? r2 : et2;
+  }, [t.closeButton, et2]), Tt = React2.useMemo(() => t.duration || X2 || Wt, [t.duration, X2]), gt = React2.useRef(0), U2 = React2.useRef(0), St = React2.useRef(0), K2 = React2.useRef(null), [Gt, Qt] = st2.split("-"), Rt = React2.useMemo(() => S2.reduce((r2, m2, c2) => c2 >= dt2 ? r2 : r2 + m2.height, 0), [S2, dt2]), Et = Ft(), qt = t.invert || e, ht = N2 === "loading";
+  U2.current = React2.useMemo(() => dt2 * pt + Rt, [dt2, Rt]), React2.useEffect(() => {
+    O2.current = Tt;
+  }, [Tt]), React2.useEffect(() => {
+    H2(true);
+  }, []), React2.useEffect(() => {
+    let r2 = k2.current;
+    if (r2) {
+      let m2 = r2.getBoundingClientRect().height;
+      return _2(m2), f((c2) => [{ toastId: t.id, height: m2, position: t.position }, ...c2]), () => f((c2) => c2.filter((b2) => b2.toastId !== t.id));
+    }
+  }, [f, t.id]), React2.useLayoutEffect(() => {
+    if (!W2) return;
+    let r2 = k2.current, m2 = r2.style.height;
+    r2.style.height = "auto";
+    let c2 = r2.getBoundingClientRect().height;
+    r2.style.height = m2, _2(c2), f((b2) => b2.find((x3) => x3.toastId === t.id) ? b2.map((x3) => x3.toastId === t.id ? { ...x3, height: c2 } : x3) : [{ toastId: t.id, height: c2, position: t.position }, ...b2]);
+  }, [W2, t.title, t.description, f, t.id]);
+  let $2 = React2.useCallback(() => {
+    mt(true), j2(U2.current), f((r2) => r2.filter((m2) => m2.toastId !== t.id)), setTimeout(() => {
+      T2(t);
+    }, we);
+  }, [t, T2, f, U2]);
+  React2.useEffect(() => {
+    if (t.promise && N2 === "loading" || t.duration === 1 / 0 || t.type === "loading") return;
+    let r2;
+    return D || u || it2 && Et ? (() => {
+      if (St.current < gt.current) {
+        let b2 = (/* @__PURE__ */ new Date()).getTime() - gt.current;
+        O2.current = O2.current - b2;
+      }
+      St.current = (/* @__PURE__ */ new Date()).getTime();
+    })() : (() => {
+      O2.current !== 1 / 0 && (gt.current = (/* @__PURE__ */ new Date()).getTime(), r2 = setTimeout(() => {
+        var b2;
+        (b2 = t.onAutoClose) == null || b2.call(t, t), $2();
+      }, O2.current));
+    })(), () => clearTimeout(r2);
+  }, [D, u, t, N2, it2, Et, $2]), React2.useEffect(() => {
+    t.delete && $2();
+  }, [$2, t.delete]);
+  function Zt() {
+    var r2, m2, c2;
+    return P2 != null && P2.loading ? React2.createElement("div", { className: M$1(s2 == null ? void 0 : s2.loader, (r2 = t == null ? void 0 : t.classNames) == null ? void 0 : r2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, P2.loading) : rt ? React2.createElement("div", { className: M$1(s2 == null ? void 0 : s2.loader, (m2 = t == null ? void 0 : t.classNames) == null ? void 0 : m2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, rt) : React2.createElement(Yt, { className: M$1(s2 == null ? void 0 : s2.loader, (c2 = t == null ? void 0 : t.classNames) == null ? void 0 : c2.loader), visible: N2 === "loading" });
+  }
+  return React2.createElement("li", { tabIndex: 0, ref: k2, className: M$1(ot2, Kt, s2 == null ? void 0 : s2.toast, (Dt = t == null ? void 0 : t.classNames) == null ? void 0 : Dt.toast, s2 == null ? void 0 : s2.default, s2 == null ? void 0 : s2[N2], (Pt = t == null ? void 0 : t.classNames) == null ? void 0 : Pt[N2]), "data-sonner-toast": "", "data-rich-colors": (Nt = t.richColors) != null ? Nt : F2, "data-styled": !(t.jsx || t.unstyled || a2), "data-mounted": W2, "data-promise": !!t.promise, "data-swiped": h2, "data-removed": A2, "data-visible": Ut, "data-y-position": Gt, "data-x-position": Qt, "data-index": g2, "data-front": Vt, "data-swiping": L2, "data-dismissible": V2, "data-type": N2, "data-invert": qt, "data-swipe-out": ct2, "data-swipe-direction": lt, "data-expanded": !!(D || B2 && W2), style: { "--index": g2, "--toasts-before": g2, "--z-index": i.length - g2, "--offset": `${A2 ? R2 : U2.current}px`, "--initial-height": B2 ? "auto" : `${p2}px`, ...ut2, ...t.style }, onDragEnd: () => {
+    z2(false), C2(null), K2.current = null;
+  }, onPointerDown: (r2) => {
+    ht || !V2 || (G2.current = /* @__PURE__ */ new Date(), j2(U2.current), r2.target.setPointerCapture(r2.pointerId), r2.target.tagName !== "BUTTON" && (z2(true), K2.current = { x: r2.clientX, y: r2.clientY }));
+  }, onPointerUp: () => {
+    var x3, Q2, q2, Z2;
+    if (ct2 || !V2) return;
+    K2.current = null;
+    let r2 = Number(((x3 = k2.current) == null ? void 0 : x3.style.getPropertyValue("--swipe-amount-x").replace("px", "")) || 0), m2 = Number(((Q2 = k2.current) == null ? void 0 : Q2.style.getPropertyValue("--swipe-amount-y").replace("px", "")) || 0), c2 = (/* @__PURE__ */ new Date()).getTime() - ((q2 = G2.current) == null ? void 0 : q2.getTime()), b2 = Y2 === "x" ? r2 : m2, I2 = Math.abs(b2) / c2;
+    if (Math.abs(b2) >= ye || I2 > 0.11) {
+      j2(U2.current), (Z2 = t.onDismiss) == null || Z2.call(t, t), J2(Y2 === "x" ? r2 > 0 ? "right" : "left" : m2 > 0 ? "down" : "up"), $2(), d2(true), y2(false);
+      return;
+    }
+    z2(false), C2(null);
+  }, onPointerMove: (r2) => {
+    var Q2, q2, Z2, zt;
+    if (!K2.current || !V2 || ((Q2 = window.getSelection()) == null ? void 0 : Q2.toString().length) > 0) return;
+    let c2 = r2.clientY - K2.current.y, b2 = r2.clientX - K2.current.x, I2 = (q2 = n.swipeDirections) != null ? q2 : xe(st2);
+    !Y2 && (Math.abs(b2) > 1 || Math.abs(c2) > 1) && C2(Math.abs(b2) > Math.abs(c2) ? "x" : "y");
+    let x3 = { x: 0, y: 0 };
+    Y2 === "y" ? (I2.includes("top") || I2.includes("bottom")) && (I2.includes("top") && c2 < 0 || I2.includes("bottom") && c2 > 0) && (x3.y = c2) : Y2 === "x" && (I2.includes("left") || I2.includes("right")) && (I2.includes("left") && b2 < 0 || I2.includes("right") && b2 > 0) && (x3.x = b2), (Math.abs(x3.x) > 0 || Math.abs(x3.y) > 0) && y2(true), (Z2 = k2.current) == null || Z2.style.setProperty("--swipe-amount-x", `${x3.x}px`), (zt = k2.current) == null || zt.style.setProperty("--swipe-amount-y", `${x3.y}px`);
+  } }, Jt && !t.jsx ? React2.createElement("button", { "aria-label": nt2, "data-disabled": ht, "data-close-button": true, onClick: ht || !V2 ? () => {
+  } : () => {
+    var r2;
+    $2(), (r2 = t.onDismiss) == null || r2.call(t, t);
+  }, className: M$1(s2 == null ? void 0 : s2.closeButton, (Bt = t == null ? void 0 : t.classNames) == null ? void 0 : Bt.closeButton) }, (Ct = P2 == null ? void 0 : P2.close) != null ? Ct : Ot) : null, t.jsx || reactExports.isValidElement(t.title) ? t.jsx ? t.jsx : typeof t.title == "function" ? t.title() : t.title : React2.createElement(React2.Fragment, null, N2 || t.icon || t.promise ? React2.createElement("div", { "data-icon": "", className: M$1(s2 == null ? void 0 : s2.icon, (kt = t == null ? void 0 : t.classNames) == null ? void 0 : kt.icon) }, t.promise || t.type === "loading" && !t.icon ? t.icon || Zt() : null, t.type !== "loading" ? t.icon || (P2 == null ? void 0 : P2[N2]) || jt(N2) : null) : null, React2.createElement("div", { "data-content": "", className: M$1(s2 == null ? void 0 : s2.content, (It = t == null ? void 0 : t.classNames) == null ? void 0 : It.content) }, React2.createElement("div", { "data-title": "", className: M$1(s2 == null ? void 0 : s2.title, (Mt = t == null ? void 0 : t.classNames) == null ? void 0 : Mt.title) }, typeof t.title == "function" ? t.title() : t.title), t.description ? React2.createElement("div", { "data-description": "", className: M$1(at, Xt, s2 == null ? void 0 : s2.description, (Ht = t == null ? void 0 : t.classNames) == null ? void 0 : Ht.description) }, typeof t.description == "function" ? t.description() : t.description) : null), reactExports.isValidElement(t.cancel) ? t.cancel : t.cancel && tt(t.cancel) ? React2.createElement("button", { "data-button": true, "data-cancel": true, style: t.cancelButtonStyle || ft2, onClick: (r2) => {
+    var m2, c2;
+    tt(t.cancel) && V2 && ((c2 = (m2 = t.cancel).onClick) == null || c2.call(m2, r2), $2());
+  }, className: M$1(s2 == null ? void 0 : s2.cancelButton, (At = t == null ? void 0 : t.classNames) == null ? void 0 : At.cancelButton) }, t.cancel.label) : null, reactExports.isValidElement(t.action) ? t.action : t.action && tt(t.action) ? React2.createElement("button", { "data-button": true, "data-action": true, style: t.actionButtonStyle || l, onClick: (r2) => {
+    var m2, c2;
+    tt(t.action) && ((c2 = (m2 = t.action).onClick) == null || c2.call(m2, r2), !r2.defaultPrevented && $2());
+  }, className: M$1(s2 == null ? void 0 : s2.actionButton, (Lt = t == null ? void 0 : t.classNames) == null ? void 0 : Lt.actionButton) }, t.action.label) : null));
+};
+function _t() {
+  if (typeof window == "undefined" || typeof document == "undefined") return "ltr";
+  let n = document.documentElement.getAttribute("dir");
+  return n === "auto" || !n ? window.getComputedStyle(document.documentElement).direction : n;
+}
+function Te(n, e) {
+  let t = {};
+  return [n, e].forEach((a2, u) => {
+    let f = u === 1, w2 = f ? "--mobile-offset" : "--offset", S2 = f ? ge : me;
+    function g2(i) {
+      ["top", "right", "bottom", "left"].forEach((D) => {
+        t[`${w2}-${D}`] = typeof i == "number" ? `${i}px` : i;
+      });
+    }
+    typeof a2 == "number" || typeof a2 == "string" ? g2(a2) : typeof a2 == "object" ? ["top", "right", "bottom", "left"].forEach((i) => {
+      a2[i] === void 0 ? t[`${w2}-${i}`] = S2 : t[`${w2}-${i}`] = typeof a2[i] == "number" ? `${a2[i]}px` : a2[i];
+    }) : g2(S2);
+  }), t;
+}
+var $e = reactExports.forwardRef(function(e, t) {
+  let { invert: a2, position: u = "bottom-right", hotkey: f = ["altKey", "KeyT"], expand: w2, closeButton: S2, className: g2, offset: i, mobileOffset: D, theme: T2 = "light", richColors: F2, duration: et2, style: ut2, visibleToasts: ft2 = pe, toastOptions: l, dir: ot2 = _t(), gap: at = be, loadingIcon: X2, icons: st2, containerAriaLabel: pt = "Notifications", pauseWhenPageIsHidden: rt } = e, [B2, s2] = React2.useState([]), P2 = React2.useMemo(() => Array.from(new Set([u].concat(B2.filter((d2) => d2.position).map((d2) => d2.position)))), [B2, u]), [nt2, it2] = React2.useState([]), [Y2, C2] = React2.useState(false), [lt, J2] = React2.useState(false), [W2, H2] = React2.useState(T2 !== "system" ? T2 : typeof window != "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"), A2 = React2.useRef(null), mt = f.join("+").replace(/Key/g, "").replace(/Digit/g, ""), L2 = React2.useRef(null), z2 = React2.useRef(false), ct2 = React2.useCallback((d2) => {
+    s2((h2) => {
+      var y2;
+      return (y2 = h2.find((R2) => R2.id === d2.id)) != null && y2.delete || v.dismiss(d2.id), h2.filter(({ id: R2 }) => R2 !== d2.id);
+    });
+  }, []);
+  return React2.useEffect(() => v.subscribe((d2) => {
+    if (d2.dismiss) {
+      s2((h2) => h2.map((y2) => y2.id === d2.id ? { ...y2, delete: true } : y2));
+      return;
+    }
+    setTimeout(() => {
+      ReactDOM$2.flushSync(() => {
+        s2((h2) => {
+          let y2 = h2.findIndex((R2) => R2.id === d2.id);
+          return y2 !== -1 ? [...h2.slice(0, y2), { ...h2[y2], ...d2 }, ...h2.slice(y2 + 1)] : [d2, ...h2];
+        });
+      });
+    });
+  }), []), React2.useEffect(() => {
+    if (T2 !== "system") {
+      H2(T2);
+      return;
+    }
+    if (T2 === "system" && (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? H2("dark") : H2("light")), typeof window == "undefined") return;
+    let d2 = window.matchMedia("(prefers-color-scheme: dark)");
+    try {
+      d2.addEventListener("change", ({ matches: h2 }) => {
+        H2(h2 ? "dark" : "light");
+      });
+    } catch (h2) {
+      d2.addListener(({ matches: y2 }) => {
+        try {
+          H2(y2 ? "dark" : "light");
+        } catch (R2) {
+          console.error(R2);
+        }
+      });
+    }
+  }, [T2]), React2.useEffect(() => {
+    B2.length <= 1 && C2(false);
+  }, [B2]), React2.useEffect(() => {
+    let d2 = (h2) => {
+      var R2, j2;
+      f.every((p2) => h2[p2] || h2.code === p2) && (C2(true), (R2 = A2.current) == null || R2.focus()), h2.code === "Escape" && (document.activeElement === A2.current || (j2 = A2.current) != null && j2.contains(document.activeElement)) && C2(false);
+    };
+    return document.addEventListener("keydown", d2), () => document.removeEventListener("keydown", d2);
+  }, [f]), React2.useEffect(() => {
+    if (A2.current) return () => {
+      L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null, z2.current = false);
+    };
+  }, [A2.current]), React2.createElement("section", { ref: t, "aria-label": `${pt} ${mt}`, tabIndex: -1, "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", suppressHydrationWarning: true }, P2.map((d2, h2) => {
+    var j2;
+    let [y2, R2] = d2.split("-");
+    return B2.length ? React2.createElement("ol", { key: d2, dir: ot2 === "auto" ? _t() : ot2, tabIndex: -1, ref: A2, className: g2, "data-sonner-toaster": true, "data-theme": W2, "data-y-position": y2, "data-lifted": Y2 && B2.length > 1 && !w2, "data-x-position": R2, style: { "--front-toast-height": `${((j2 = nt2[0]) == null ? void 0 : j2.height) || 0}px`, "--width": `${he}px`, "--gap": `${at}px`, ...ut2, ...Te(i, D) }, onBlur: (p2) => {
+      z2.current && !p2.currentTarget.contains(p2.relatedTarget) && (z2.current = false, L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null));
+    }, onFocus: (p2) => {
+      p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || z2.current || (z2.current = true, L2.current = p2.relatedTarget);
+    }, onMouseEnter: () => C2(true), onMouseMove: () => C2(true), onMouseLeave: () => {
+      lt || C2(false);
+    }, onDragEnd: () => C2(false), onPointerDown: (p2) => {
+      p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || J2(true);
+    }, onPointerUp: () => J2(false) }, B2.filter((p2) => !p2.position && h2 === 0 || p2.position === d2).map((p2, _2) => {
+      var O2, G2;
+      return React2.createElement(ve, { key: p2.id, icons: st2, index: _2, toast: p2, defaultRichColors: F2, duration: (O2 = l == null ? void 0 : l.duration) != null ? O2 : et2, className: l == null ? void 0 : l.className, descriptionClassName: l == null ? void 0 : l.descriptionClassName, invert: a2, visibleToasts: ft2, closeButton: (G2 = l == null ? void 0 : l.closeButton) != null ? G2 : S2, interacting: lt, position: d2, style: l == null ? void 0 : l.style, unstyled: l == null ? void 0 : l.unstyled, classNames: l == null ? void 0 : l.classNames, cancelButtonStyle: l == null ? void 0 : l.cancelButtonStyle, actionButtonStyle: l == null ? void 0 : l.actionButtonStyle, removeToast: ct2, toasts: B2.filter((k2) => k2.position == p2.position), heights: nt2.filter((k2) => k2.position == p2.position), setHeights: it2, expandByDefault: w2, gap: at, loadingIcon: X2, expanded: Y2, pauseWhenPageIsHidden: rt, swipeDirections: e.swipeDirections });
+    })) : null;
+  }));
+});
+function NamePromptModal({ onNameSet }) {
+  const setNameMutation = useSetUserName();
+  const [name, setName] = reactExports.useState("");
+  const [error, setError] = reactExports.useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Please enter a display name to continue.");
+      return;
+    }
+    if (trimmed.length > 60) {
+      setError("Name must be 60 characters or fewer.");
+      return;
+    }
+    setError("");
+    try {
+      await setNameMutation.mutateAsync(trimmed);
+      ue.success(`Welcome, ${trimmed}!`);
+      onNameSet(trimmed);
+    } catch {
+      ue.error("Failed to save name. Please try again.");
+    }
+  };
+  return (
+    // Full-screen blocking overlay — no dismiss via outside click
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm",
+        "data-ocid": "name_prompt.dialog",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full max-w-md mx-4 rounded-2xl bg-card border border-border shadow-xl", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center pt-8 pb-4 px-8", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-14 w-14 rounded-2xl bg-primary flex items-center justify-center mb-4", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BookOpen, { className: "h-7 w-7 text-primary-foreground" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-display font-bold text-2xl text-foreground text-center", children: "Welcome to BookShare" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground text-center mt-2 max-w-xs", children: "Choose a display name so the community knows who you are. You can change it anytime in Settings." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "px-8 pb-8 space-y-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                Label,
+                {
+                  htmlFor: "display-name-input",
+                  className: "flex items-center gap-2",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "h-3.5 w-3.5 text-muted-foreground" }),
+                    "Display name"
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Input,
+                {
+                  id: "display-name-input",
+                  type: "text",
+                  placeholder: "e.g. Alex Reader",
+                  value: name,
+                  onChange: (e) => {
+                    setName(e.target.value);
+                    if (error) setError("");
+                  },
+                  maxLength: 60,
+                  autoFocus: true,
+                  autoComplete: "name",
+                  "data-ocid": "name_prompt.input"
+                }
+              ),
+              error && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "p",
+                {
+                  className: "text-xs text-destructive font-medium",
+                  "data-ocid": "name_prompt.field_error",
+                  children: error
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                type: "submit",
+                className: "w-full",
+                disabled: !name.trim() || setNameMutation.isPending,
+                "data-ocid": "name_prompt.submit_button",
+                children: setNameMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin mr-2" }),
+                  "Saving..."
+                ] }) : "Continue to BookShare"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[11px] text-muted-foreground text-center", children: "A name is required to participate in the community." })
+          ] })
+        ] })
+      }
+    )
+  );
 }
 const features = [
   {
@@ -30947,7 +32205,7 @@ function Skeleton({ className, ...props }) {
     }
   );
 }
-var M$1 = (e, i, s2, u, m2, a2, l, h2) => {
+var M = (e, i, s2, u, m2, a2, l, h2) => {
   let d2 = document.documentElement, w2 = ["light", "dark"];
   function p2(n) {
     (Array.isArray(e) ? e : [e]).forEach((y2) => {
@@ -30975,283 +32233,7 @@ var x2 = reactExports.createContext(void 0), U = { setTheme: (e) => {
 };
 reactExports.memo(({ forcedTheme: e, storageKey: i, attribute: s2, enableSystem: u, enableColorScheme: m2, defaultTheme: a2, value: l, themes: h2, nonce: d2, scriptProps: w2 }) => {
   let p2 = JSON.stringify([s2, i, a2, e, h2, l, u, m2]).slice(1, -1);
-  return reactExports.createElement("script", { ...w2, suppressHydrationWarning: true, nonce: typeof window == "undefined" ? d2 : "", dangerouslySetInnerHTML: { __html: `(${M$1.toString()})(${p2})` } });
-});
-var jt = (n) => {
-  switch (n) {
-    case "success":
-      return ee;
-    case "info":
-      return ae;
-    case "warning":
-      return oe;
-    case "error":
-      return se;
-    default:
-      return null;
-  }
-}, te = Array(12).fill(0), Yt = ({ visible: n, className: e }) => React2.createElement("div", { className: ["sonner-loading-wrapper", e].filter(Boolean).join(" "), "data-visible": n }, React2.createElement("div", { className: "sonner-spinner" }, te.map((t, a2) => React2.createElement("div", { className: "sonner-loading-bar", key: `spinner-bar-${a2}` })))), ee = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", clipRule: "evenodd" })), oe = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z", clipRule: "evenodd" })), ae = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z", clipRule: "evenodd" })), se = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z", clipRule: "evenodd" })), Ot = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, React2.createElement("line", { x1: "18", y1: "6", x2: "6", y2: "18" }), React2.createElement("line", { x1: "6", y1: "6", x2: "18", y2: "18" }));
-var Ft = () => {
-  let [n, e] = React2.useState(document.hidden);
-  return React2.useEffect(() => {
-    let t = () => {
-      e(document.hidden);
-    };
-    return document.addEventListener("visibilitychange", t), () => window.removeEventListener("visibilitychange", t);
-  }, []), n;
-};
-var bt = 1, yt = class {
-  constructor() {
-    this.subscribe = (e) => (this.subscribers.push(e), () => {
-      let t = this.subscribers.indexOf(e);
-      this.subscribers.splice(t, 1);
-    });
-    this.publish = (e) => {
-      this.subscribers.forEach((t) => t(e));
-    };
-    this.addToast = (e) => {
-      this.publish(e), this.toasts = [...this.toasts, e];
-    };
-    this.create = (e) => {
-      var S2;
-      let { message: t, ...a2 } = e, u = typeof (e == null ? void 0 : e.id) == "number" || ((S2 = e.id) == null ? void 0 : S2.length) > 0 ? e.id : bt++, f = this.toasts.find((g2) => g2.id === u), w2 = e.dismissible === void 0 ? true : e.dismissible;
-      return this.dismissedToasts.has(u) && this.dismissedToasts.delete(u), f ? this.toasts = this.toasts.map((g2) => g2.id === u ? (this.publish({ ...g2, ...e, id: u, title: t }), { ...g2, ...e, id: u, dismissible: w2, title: t }) : g2) : this.addToast({ title: t, ...a2, dismissible: w2, id: u }), u;
-    };
-    this.dismiss = (e) => (this.dismissedToasts.add(e), e || this.toasts.forEach((t) => {
-      this.subscribers.forEach((a2) => a2({ id: t.id, dismiss: true }));
-    }), this.subscribers.forEach((t) => t({ id: e, dismiss: true })), e);
-    this.message = (e, t) => this.create({ ...t, message: e });
-    this.error = (e, t) => this.create({ ...t, message: e, type: "error" });
-    this.success = (e, t) => this.create({ ...t, type: "success", message: e });
-    this.info = (e, t) => this.create({ ...t, type: "info", message: e });
-    this.warning = (e, t) => this.create({ ...t, type: "warning", message: e });
-    this.loading = (e, t) => this.create({ ...t, type: "loading", message: e });
-    this.promise = (e, t) => {
-      if (!t) return;
-      let a2;
-      t.loading !== void 0 && (a2 = this.create({ ...t, promise: e, type: "loading", message: t.loading, description: typeof t.description != "function" ? t.description : void 0 }));
-      let u = e instanceof Promise ? e : e(), f = a2 !== void 0, w2, S2 = u.then(async (i) => {
-        if (w2 = ["resolve", i], React2.isValidElement(i)) f = false, this.create({ id: a2, type: "default", message: i });
-        else if (ie(i) && !i.ok) {
-          f = false;
-          let T2 = typeof t.error == "function" ? await t.error(`HTTP error! status: ${i.status}`) : t.error, F2 = typeof t.description == "function" ? await t.description(`HTTP error! status: ${i.status}`) : t.description;
-          this.create({ id: a2, type: "error", message: T2, description: F2 });
-        } else if (t.success !== void 0) {
-          f = false;
-          let T2 = typeof t.success == "function" ? await t.success(i) : t.success, F2 = typeof t.description == "function" ? await t.description(i) : t.description;
-          this.create({ id: a2, type: "success", message: T2, description: F2 });
-        }
-      }).catch(async (i) => {
-        if (w2 = ["reject", i], t.error !== void 0) {
-          f = false;
-          let D = typeof t.error == "function" ? await t.error(i) : t.error, T2 = typeof t.description == "function" ? await t.description(i) : t.description;
-          this.create({ id: a2, type: "error", message: D, description: T2 });
-        }
-      }).finally(() => {
-        var i;
-        f && (this.dismiss(a2), a2 = void 0), (i = t.finally) == null || i.call(t);
-      }), g2 = () => new Promise((i, D) => S2.then(() => w2[0] === "reject" ? D(w2[1]) : i(w2[1])).catch(D));
-      return typeof a2 != "string" && typeof a2 != "number" ? { unwrap: g2 } : Object.assign(a2, { unwrap: g2 });
-    };
-    this.custom = (e, t) => {
-      let a2 = (t == null ? void 0 : t.id) || bt++;
-      return this.create({ jsx: e(a2), id: a2, ...t }), a2;
-    };
-    this.getActiveToasts = () => this.toasts.filter((e) => !this.dismissedToasts.has(e.id));
-    this.subscribers = [], this.toasts = [], this.dismissedToasts = /* @__PURE__ */ new Set();
-  }
-}, v = new yt(), ne = (n, e) => {
-  let t = (e == null ? void 0 : e.id) || bt++;
-  return v.addToast({ title: n, ...e, id: t }), t;
-}, ie = (n) => n && typeof n == "object" && "ok" in n && typeof n.ok == "boolean" && "status" in n && typeof n.status == "number", le = ne, ce = () => v.toasts, de = () => v.getActiveToasts(), ue = Object.assign(le, { success: v.success, info: v.info, warning: v.warning, error: v.error, custom: v.custom, message: v.message, promise: v.promise, dismiss: v.dismiss, loading: v.loading }, { getHistory: ce, getToasts: de });
-function wt(n, { insertAt: e } = {}) {
-  if (typeof document == "undefined") return;
-  let t = document.head || document.getElementsByTagName("head")[0], a2 = document.createElement("style");
-  a2.type = "text/css", e === "top" && t.firstChild ? t.insertBefore(a2, t.firstChild) : t.appendChild(a2), a2.styleSheet ? a2.styleSheet.cssText = n : a2.appendChild(document.createTextNode(n));
-}
-wt(`:where(html[dir="ltr"]),:where([data-sonner-toaster][dir="ltr"]){--toast-icon-margin-start: -3px;--toast-icon-margin-end: 4px;--toast-svg-margin-start: -1px;--toast-svg-margin-end: 0px;--toast-button-margin-start: auto;--toast-button-margin-end: 0;--toast-close-button-start: 0;--toast-close-button-end: unset;--toast-close-button-transform: translate(-35%, -35%)}:where(html[dir="rtl"]),:where([data-sonner-toaster][dir="rtl"]){--toast-icon-margin-start: 4px;--toast-icon-margin-end: -3px;--toast-svg-margin-start: 0px;--toast-svg-margin-end: -1px;--toast-button-margin-start: 0;--toast-button-margin-end: auto;--toast-close-button-start: unset;--toast-close-button-end: 0;--toast-close-button-transform: translate(35%, -35%)}:where([data-sonner-toaster]){position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1: hsl(0, 0%, 99%);--gray2: hsl(0, 0%, 97.3%);--gray3: hsl(0, 0%, 95.1%);--gray4: hsl(0, 0%, 93%);--gray5: hsl(0, 0%, 90.9%);--gray6: hsl(0, 0%, 88.7%);--gray7: hsl(0, 0%, 85.8%);--gray8: hsl(0, 0%, 78%);--gray9: hsl(0, 0%, 56.1%);--gray10: hsl(0, 0%, 52.3%);--gray11: hsl(0, 0%, 43.5%);--gray12: hsl(0, 0%, 9%);--border-radius: 8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:none;z-index:999999999;transition:transform .4s ease}:where([data-sonner-toaster][data-lifted="true"]){transform:translateY(-10px)}@media (hover: none) and (pointer: coarse){:where([data-sonner-toaster][data-lifted="true"]){transform:none}}:where([data-sonner-toaster][data-x-position="right"]){right:var(--offset-right)}:where([data-sonner-toaster][data-x-position="left"]){left:var(--offset-left)}:where([data-sonner-toaster][data-x-position="center"]){left:50%;transform:translate(-50%)}:where([data-sonner-toaster][data-y-position="top"]){top:var(--offset-top)}:where([data-sonner-toaster][data-y-position="bottom"]){bottom:var(--offset-bottom)}:where([data-sonner-toast]){--y: translateY(100%);--lift-amount: calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);filter:blur(0);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:none;overflow-wrap:anywhere}:where([data-sonner-toast][data-styled="true"]){padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px #0000001a;width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}:where([data-sonner-toast]:focus-visible){box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast][data-y-position="top"]){top:0;--y: translateY(-100%);--lift: 1;--lift-amount: calc(1 * var(--gap))}:where([data-sonner-toast][data-y-position="bottom"]){bottom:0;--y: translateY(100%);--lift: -1;--lift-amount: calc(var(--lift) * var(--gap))}:where([data-sonner-toast]) :where([data-description]){font-weight:400;line-height:1.4;color:inherit}:where([data-sonner-toast]) :where([data-title]){font-weight:500;line-height:1.5;color:inherit}:where([data-sonner-toast]) :where([data-icon]){display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}:where([data-sonner-toast][data-promise="true"]) :where([data-icon])>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}:where([data-sonner-toast]) :where([data-icon])>*{flex-shrink:0}:where([data-sonner-toast]) :where([data-icon]) svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}:where([data-sonner-toast]) :where([data-content]){display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;cursor:pointer;outline:none;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}:where([data-sonner-toast]) :where([data-button]):focus-visible{box-shadow:0 0 0 2px #0006}:where([data-sonner-toast]) :where([data-button]):first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}:where([data-sonner-toast]) :where([data-cancel]){color:var(--normal-text);background:rgba(0,0,0,.08)}:where([data-sonner-toast][data-theme="dark"]) :where([data-cancel]){background:rgba(255,255,255,.3)}:where([data-sonner-toast]) :where([data-close-button]){position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast] [data-close-button]{background:var(--gray1)}:where([data-sonner-toast]) :where([data-close-button]):focus-visible{box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast]) :where([data-disabled="true"]){cursor:not-allowed}:where([data-sonner-toast]):hover :where([data-close-button]):hover{background:var(--gray2);border-color:var(--gray5)}:where([data-sonner-toast][data-swiping="true"]):before{content:"";position:absolute;left:-50%;right:-50%;height:100%;z-index:-1}:where([data-sonner-toast][data-y-position="top"][data-swiping="true"]):before{bottom:50%;transform:scaleY(3) translateY(50%)}:where([data-sonner-toast][data-y-position="bottom"][data-swiping="true"]):before{top:50%;transform:scaleY(3) translateY(-50%)}:where([data-sonner-toast][data-swiping="false"][data-removed="true"]):before{content:"";position:absolute;inset:0;transform:scaleY(2)}:where([data-sonner-toast]):after{content:"";position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}:where([data-sonner-toast][data-mounted="true"]){--y: translateY(0);opacity:1}:where([data-sonner-toast][data-expanded="false"][data-front="false"]){--scale: var(--toasts-before) * .05 + 1;--y: translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}:where([data-sonner-toast])>*{transition:opacity .4s}:where([data-sonner-toast][data-expanded="false"][data-front="false"][data-styled="true"])>*{opacity:0}:where([data-sonner-toast][data-visible="false"]){opacity:0;pointer-events:none}:where([data-sonner-toast][data-mounted="true"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}:where([data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"]){--y: translateY(calc(var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="false"]){--y: translateY(40%);opacity:0;transition:transform .5s,opacity .2s}:where([data-sonner-toast][data-removed="true"][data-front="false"]):before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y, 0px)) translate(var(--swipe-amount-x, 0px));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width: 600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-theme=light]{--normal-bg: #fff;--normal-border: var(--gray4);--normal-text: var(--gray12);--success-bg: hsl(143, 85%, 96%);--success-border: hsl(145, 92%, 91%);--success-text: hsl(140, 100%, 27%);--info-bg: hsl(208, 100%, 97%);--info-border: hsl(221, 91%, 91%);--info-text: hsl(210, 92%, 45%);--warning-bg: hsl(49, 100%, 97%);--warning-border: hsl(49, 91%, 91%);--warning-text: hsl(31, 92%, 45%);--error-bg: hsl(359, 100%, 97%);--error-border: hsl(359, 100%, 94%);--error-text: hsl(360, 100%, 45%)}[data-sonner-toaster][data-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg: #000;--normal-border: hsl(0, 0%, 20%);--normal-text: var(--gray1)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg: #fff;--normal-border: var(--gray3);--normal-text: var(--gray12)}[data-sonner-toaster][data-theme=dark]{--normal-bg: #000;--normal-bg-hover: hsl(0, 0%, 12%);--normal-border: hsl(0, 0%, 20%);--normal-border-hover: hsl(0, 0%, 25%);--normal-text: var(--gray1);--success-bg: hsl(150, 100%, 6%);--success-border: hsl(147, 100%, 12%);--success-text: hsl(150, 86%, 65%);--info-bg: hsl(215, 100%, 6%);--info-border: hsl(223, 100%, 12%);--info-text: hsl(216, 87%, 65%);--warning-bg: hsl(64, 100%, 6%);--warning-border: hsl(60, 100%, 12%);--warning-text: hsl(46, 87%, 65%);--error-bg: hsl(358, 76%, 10%);--error-border: hsl(357, 89%, 16%);--error-text: hsl(358, 100%, 81%)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success],[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info],[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning],[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error],[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size: 16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:nth-child(1){animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}to{opacity:.15}}@media (prefers-reduced-motion){[data-sonner-toast],[data-sonner-toast]>*,.sonner-loading-bar{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}
-`);
-function tt(n) {
-  return n.label !== void 0;
-}
-var pe = 3, me = "32px", ge = "16px", Wt = 4e3, he = 356, be = 14, ye = 20, we = 200;
-function M(...n) {
-  return n.filter(Boolean).join(" ");
-}
-function xe(n) {
-  let [e, t] = n.split("-"), a2 = [];
-  return e && a2.push(e), t && a2.push(t), a2;
-}
-var ve = (n) => {
-  var Dt, Pt, Nt, Bt, Ct, kt, It, Mt, Ht, At, Lt;
-  let { invert: e, toast: t, unstyled: a2, interacting: u, setHeights: f, visibleToasts: w2, heights: S2, index: g2, toasts: i, expanded: D, removeToast: T2, defaultRichColors: F2, closeButton: et2, style: ut2, cancelButtonStyle: ft2, actionButtonStyle: l, className: ot2 = "", descriptionClassName: at = "", duration: X2, position: st2, gap: pt, loadingIcon: rt, expandByDefault: B2, classNames: s2, icons: P2, closeButtonAriaLabel: nt2 = "Close toast", pauseWhenPageIsHidden: it2 } = n, [Y2, C2] = React2.useState(null), [lt, J2] = React2.useState(null), [W2, H2] = React2.useState(false), [A2, mt] = React2.useState(false), [L2, z2] = React2.useState(false), [ct2, d2] = React2.useState(false), [h2, y2] = React2.useState(false), [R2, j2] = React2.useState(0), [p2, _2] = React2.useState(0), O2 = React2.useRef(t.duration || X2 || Wt), G2 = React2.useRef(null), k2 = React2.useRef(null), Vt = g2 === 0, Ut = g2 + 1 <= w2, N2 = t.type, V2 = t.dismissible !== false, Kt = t.className || "", Xt = t.descriptionClassName || "", dt2 = React2.useMemo(() => S2.findIndex((r2) => r2.toastId === t.id) || 0, [S2, t.id]), Jt = React2.useMemo(() => {
-    var r2;
-    return (r2 = t.closeButton) != null ? r2 : et2;
-  }, [t.closeButton, et2]), Tt = React2.useMemo(() => t.duration || X2 || Wt, [t.duration, X2]), gt = React2.useRef(0), U2 = React2.useRef(0), St = React2.useRef(0), K2 = React2.useRef(null), [Gt, Qt] = st2.split("-"), Rt = React2.useMemo(() => S2.reduce((r2, m2, c2) => c2 >= dt2 ? r2 : r2 + m2.height, 0), [S2, dt2]), Et = Ft(), qt = t.invert || e, ht = N2 === "loading";
-  U2.current = React2.useMemo(() => dt2 * pt + Rt, [dt2, Rt]), React2.useEffect(() => {
-    O2.current = Tt;
-  }, [Tt]), React2.useEffect(() => {
-    H2(true);
-  }, []), React2.useEffect(() => {
-    let r2 = k2.current;
-    if (r2) {
-      let m2 = r2.getBoundingClientRect().height;
-      return _2(m2), f((c2) => [{ toastId: t.id, height: m2, position: t.position }, ...c2]), () => f((c2) => c2.filter((b2) => b2.toastId !== t.id));
-    }
-  }, [f, t.id]), React2.useLayoutEffect(() => {
-    if (!W2) return;
-    let r2 = k2.current, m2 = r2.style.height;
-    r2.style.height = "auto";
-    let c2 = r2.getBoundingClientRect().height;
-    r2.style.height = m2, _2(c2), f((b2) => b2.find((x3) => x3.toastId === t.id) ? b2.map((x3) => x3.toastId === t.id ? { ...x3, height: c2 } : x3) : [{ toastId: t.id, height: c2, position: t.position }, ...b2]);
-  }, [W2, t.title, t.description, f, t.id]);
-  let $2 = React2.useCallback(() => {
-    mt(true), j2(U2.current), f((r2) => r2.filter((m2) => m2.toastId !== t.id)), setTimeout(() => {
-      T2(t);
-    }, we);
-  }, [t, T2, f, U2]);
-  React2.useEffect(() => {
-    if (t.promise && N2 === "loading" || t.duration === 1 / 0 || t.type === "loading") return;
-    let r2;
-    return D || u || it2 && Et ? (() => {
-      if (St.current < gt.current) {
-        let b2 = (/* @__PURE__ */ new Date()).getTime() - gt.current;
-        O2.current = O2.current - b2;
-      }
-      St.current = (/* @__PURE__ */ new Date()).getTime();
-    })() : (() => {
-      O2.current !== 1 / 0 && (gt.current = (/* @__PURE__ */ new Date()).getTime(), r2 = setTimeout(() => {
-        var b2;
-        (b2 = t.onAutoClose) == null || b2.call(t, t), $2();
-      }, O2.current));
-    })(), () => clearTimeout(r2);
-  }, [D, u, t, N2, it2, Et, $2]), React2.useEffect(() => {
-    t.delete && $2();
-  }, [$2, t.delete]);
-  function Zt() {
-    var r2, m2, c2;
-    return P2 != null && P2.loading ? React2.createElement("div", { className: M(s2 == null ? void 0 : s2.loader, (r2 = t == null ? void 0 : t.classNames) == null ? void 0 : r2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, P2.loading) : rt ? React2.createElement("div", { className: M(s2 == null ? void 0 : s2.loader, (m2 = t == null ? void 0 : t.classNames) == null ? void 0 : m2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, rt) : React2.createElement(Yt, { className: M(s2 == null ? void 0 : s2.loader, (c2 = t == null ? void 0 : t.classNames) == null ? void 0 : c2.loader), visible: N2 === "loading" });
-  }
-  return React2.createElement("li", { tabIndex: 0, ref: k2, className: M(ot2, Kt, s2 == null ? void 0 : s2.toast, (Dt = t == null ? void 0 : t.classNames) == null ? void 0 : Dt.toast, s2 == null ? void 0 : s2.default, s2 == null ? void 0 : s2[N2], (Pt = t == null ? void 0 : t.classNames) == null ? void 0 : Pt[N2]), "data-sonner-toast": "", "data-rich-colors": (Nt = t.richColors) != null ? Nt : F2, "data-styled": !(t.jsx || t.unstyled || a2), "data-mounted": W2, "data-promise": !!t.promise, "data-swiped": h2, "data-removed": A2, "data-visible": Ut, "data-y-position": Gt, "data-x-position": Qt, "data-index": g2, "data-front": Vt, "data-swiping": L2, "data-dismissible": V2, "data-type": N2, "data-invert": qt, "data-swipe-out": ct2, "data-swipe-direction": lt, "data-expanded": !!(D || B2 && W2), style: { "--index": g2, "--toasts-before": g2, "--z-index": i.length - g2, "--offset": `${A2 ? R2 : U2.current}px`, "--initial-height": B2 ? "auto" : `${p2}px`, ...ut2, ...t.style }, onDragEnd: () => {
-    z2(false), C2(null), K2.current = null;
-  }, onPointerDown: (r2) => {
-    ht || !V2 || (G2.current = /* @__PURE__ */ new Date(), j2(U2.current), r2.target.setPointerCapture(r2.pointerId), r2.target.tagName !== "BUTTON" && (z2(true), K2.current = { x: r2.clientX, y: r2.clientY }));
-  }, onPointerUp: () => {
-    var x3, Q2, q2, Z2;
-    if (ct2 || !V2) return;
-    K2.current = null;
-    let r2 = Number(((x3 = k2.current) == null ? void 0 : x3.style.getPropertyValue("--swipe-amount-x").replace("px", "")) || 0), m2 = Number(((Q2 = k2.current) == null ? void 0 : Q2.style.getPropertyValue("--swipe-amount-y").replace("px", "")) || 0), c2 = (/* @__PURE__ */ new Date()).getTime() - ((q2 = G2.current) == null ? void 0 : q2.getTime()), b2 = Y2 === "x" ? r2 : m2, I2 = Math.abs(b2) / c2;
-    if (Math.abs(b2) >= ye || I2 > 0.11) {
-      j2(U2.current), (Z2 = t.onDismiss) == null || Z2.call(t, t), J2(Y2 === "x" ? r2 > 0 ? "right" : "left" : m2 > 0 ? "down" : "up"), $2(), d2(true), y2(false);
-      return;
-    }
-    z2(false), C2(null);
-  }, onPointerMove: (r2) => {
-    var Q2, q2, Z2, zt;
-    if (!K2.current || !V2 || ((Q2 = window.getSelection()) == null ? void 0 : Q2.toString().length) > 0) return;
-    let c2 = r2.clientY - K2.current.y, b2 = r2.clientX - K2.current.x, I2 = (q2 = n.swipeDirections) != null ? q2 : xe(st2);
-    !Y2 && (Math.abs(b2) > 1 || Math.abs(c2) > 1) && C2(Math.abs(b2) > Math.abs(c2) ? "x" : "y");
-    let x3 = { x: 0, y: 0 };
-    Y2 === "y" ? (I2.includes("top") || I2.includes("bottom")) && (I2.includes("top") && c2 < 0 || I2.includes("bottom") && c2 > 0) && (x3.y = c2) : Y2 === "x" && (I2.includes("left") || I2.includes("right")) && (I2.includes("left") && b2 < 0 || I2.includes("right") && b2 > 0) && (x3.x = b2), (Math.abs(x3.x) > 0 || Math.abs(x3.y) > 0) && y2(true), (Z2 = k2.current) == null || Z2.style.setProperty("--swipe-amount-x", `${x3.x}px`), (zt = k2.current) == null || zt.style.setProperty("--swipe-amount-y", `${x3.y}px`);
-  } }, Jt && !t.jsx ? React2.createElement("button", { "aria-label": nt2, "data-disabled": ht, "data-close-button": true, onClick: ht || !V2 ? () => {
-  } : () => {
-    var r2;
-    $2(), (r2 = t.onDismiss) == null || r2.call(t, t);
-  }, className: M(s2 == null ? void 0 : s2.closeButton, (Bt = t == null ? void 0 : t.classNames) == null ? void 0 : Bt.closeButton) }, (Ct = P2 == null ? void 0 : P2.close) != null ? Ct : Ot) : null, t.jsx || reactExports.isValidElement(t.title) ? t.jsx ? t.jsx : typeof t.title == "function" ? t.title() : t.title : React2.createElement(React2.Fragment, null, N2 || t.icon || t.promise ? React2.createElement("div", { "data-icon": "", className: M(s2 == null ? void 0 : s2.icon, (kt = t == null ? void 0 : t.classNames) == null ? void 0 : kt.icon) }, t.promise || t.type === "loading" && !t.icon ? t.icon || Zt() : null, t.type !== "loading" ? t.icon || (P2 == null ? void 0 : P2[N2]) || jt(N2) : null) : null, React2.createElement("div", { "data-content": "", className: M(s2 == null ? void 0 : s2.content, (It = t == null ? void 0 : t.classNames) == null ? void 0 : It.content) }, React2.createElement("div", { "data-title": "", className: M(s2 == null ? void 0 : s2.title, (Mt = t == null ? void 0 : t.classNames) == null ? void 0 : Mt.title) }, typeof t.title == "function" ? t.title() : t.title), t.description ? React2.createElement("div", { "data-description": "", className: M(at, Xt, s2 == null ? void 0 : s2.description, (Ht = t == null ? void 0 : t.classNames) == null ? void 0 : Ht.description) }, typeof t.description == "function" ? t.description() : t.description) : null), reactExports.isValidElement(t.cancel) ? t.cancel : t.cancel && tt(t.cancel) ? React2.createElement("button", { "data-button": true, "data-cancel": true, style: t.cancelButtonStyle || ft2, onClick: (r2) => {
-    var m2, c2;
-    tt(t.cancel) && V2 && ((c2 = (m2 = t.cancel).onClick) == null || c2.call(m2, r2), $2());
-  }, className: M(s2 == null ? void 0 : s2.cancelButton, (At = t == null ? void 0 : t.classNames) == null ? void 0 : At.cancelButton) }, t.cancel.label) : null, reactExports.isValidElement(t.action) ? t.action : t.action && tt(t.action) ? React2.createElement("button", { "data-button": true, "data-action": true, style: t.actionButtonStyle || l, onClick: (r2) => {
-    var m2, c2;
-    tt(t.action) && ((c2 = (m2 = t.action).onClick) == null || c2.call(m2, r2), !r2.defaultPrevented && $2());
-  }, className: M(s2 == null ? void 0 : s2.actionButton, (Lt = t == null ? void 0 : t.classNames) == null ? void 0 : Lt.actionButton) }, t.action.label) : null));
-};
-function _t() {
-  if (typeof window == "undefined" || typeof document == "undefined") return "ltr";
-  let n = document.documentElement.getAttribute("dir");
-  return n === "auto" || !n ? window.getComputedStyle(document.documentElement).direction : n;
-}
-function Te(n, e) {
-  let t = {};
-  return [n, e].forEach((a2, u) => {
-    let f = u === 1, w2 = f ? "--mobile-offset" : "--offset", S2 = f ? ge : me;
-    function g2(i) {
-      ["top", "right", "bottom", "left"].forEach((D) => {
-        t[`${w2}-${D}`] = typeof i == "number" ? `${i}px` : i;
-      });
-    }
-    typeof a2 == "number" || typeof a2 == "string" ? g2(a2) : typeof a2 == "object" ? ["top", "right", "bottom", "left"].forEach((i) => {
-      a2[i] === void 0 ? t[`${w2}-${i}`] = S2 : t[`${w2}-${i}`] = typeof a2[i] == "number" ? `${a2[i]}px` : a2[i];
-    }) : g2(S2);
-  }), t;
-}
-var $e = reactExports.forwardRef(function(e, t) {
-  let { invert: a2, position: u = "bottom-right", hotkey: f = ["altKey", "KeyT"], expand: w2, closeButton: S2, className: g2, offset: i, mobileOffset: D, theme: T2 = "light", richColors: F2, duration: et2, style: ut2, visibleToasts: ft2 = pe, toastOptions: l, dir: ot2 = _t(), gap: at = be, loadingIcon: X2, icons: st2, containerAriaLabel: pt = "Notifications", pauseWhenPageIsHidden: rt } = e, [B2, s2] = React2.useState([]), P2 = React2.useMemo(() => Array.from(new Set([u].concat(B2.filter((d2) => d2.position).map((d2) => d2.position)))), [B2, u]), [nt2, it2] = React2.useState([]), [Y2, C2] = React2.useState(false), [lt, J2] = React2.useState(false), [W2, H2] = React2.useState(T2 !== "system" ? T2 : typeof window != "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"), A2 = React2.useRef(null), mt = f.join("+").replace(/Key/g, "").replace(/Digit/g, ""), L2 = React2.useRef(null), z2 = React2.useRef(false), ct2 = React2.useCallback((d2) => {
-    s2((h2) => {
-      var y2;
-      return (y2 = h2.find((R2) => R2.id === d2.id)) != null && y2.delete || v.dismiss(d2.id), h2.filter(({ id: R2 }) => R2 !== d2.id);
-    });
-  }, []);
-  return React2.useEffect(() => v.subscribe((d2) => {
-    if (d2.dismiss) {
-      s2((h2) => h2.map((y2) => y2.id === d2.id ? { ...y2, delete: true } : y2));
-      return;
-    }
-    setTimeout(() => {
-      ReactDOM$2.flushSync(() => {
-        s2((h2) => {
-          let y2 = h2.findIndex((R2) => R2.id === d2.id);
-          return y2 !== -1 ? [...h2.slice(0, y2), { ...h2[y2], ...d2 }, ...h2.slice(y2 + 1)] : [d2, ...h2];
-        });
-      });
-    });
-  }), []), React2.useEffect(() => {
-    if (T2 !== "system") {
-      H2(T2);
-      return;
-    }
-    if (T2 === "system" && (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? H2("dark") : H2("light")), typeof window == "undefined") return;
-    let d2 = window.matchMedia("(prefers-color-scheme: dark)");
-    try {
-      d2.addEventListener("change", ({ matches: h2 }) => {
-        H2(h2 ? "dark" : "light");
-      });
-    } catch (h2) {
-      d2.addListener(({ matches: y2 }) => {
-        try {
-          H2(y2 ? "dark" : "light");
-        } catch (R2) {
-          console.error(R2);
-        }
-      });
-    }
-  }, [T2]), React2.useEffect(() => {
-    B2.length <= 1 && C2(false);
-  }, [B2]), React2.useEffect(() => {
-    let d2 = (h2) => {
-      var R2, j2;
-      f.every((p2) => h2[p2] || h2.code === p2) && (C2(true), (R2 = A2.current) == null || R2.focus()), h2.code === "Escape" && (document.activeElement === A2.current || (j2 = A2.current) != null && j2.contains(document.activeElement)) && C2(false);
-    };
-    return document.addEventListener("keydown", d2), () => document.removeEventListener("keydown", d2);
-  }, [f]), React2.useEffect(() => {
-    if (A2.current) return () => {
-      L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null, z2.current = false);
-    };
-  }, [A2.current]), React2.createElement("section", { ref: t, "aria-label": `${pt} ${mt}`, tabIndex: -1, "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", suppressHydrationWarning: true }, P2.map((d2, h2) => {
-    var j2;
-    let [y2, R2] = d2.split("-");
-    return B2.length ? React2.createElement("ol", { key: d2, dir: ot2 === "auto" ? _t() : ot2, tabIndex: -1, ref: A2, className: g2, "data-sonner-toaster": true, "data-theme": W2, "data-y-position": y2, "data-lifted": Y2 && B2.length > 1 && !w2, "data-x-position": R2, style: { "--front-toast-height": `${((j2 = nt2[0]) == null ? void 0 : j2.height) || 0}px`, "--width": `${he}px`, "--gap": `${at}px`, ...ut2, ...Te(i, D) }, onBlur: (p2) => {
-      z2.current && !p2.currentTarget.contains(p2.relatedTarget) && (z2.current = false, L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null));
-    }, onFocus: (p2) => {
-      p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || z2.current || (z2.current = true, L2.current = p2.relatedTarget);
-    }, onMouseEnter: () => C2(true), onMouseMove: () => C2(true), onMouseLeave: () => {
-      lt || C2(false);
-    }, onDragEnd: () => C2(false), onPointerDown: (p2) => {
-      p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || J2(true);
-    }, onPointerUp: () => J2(false) }, B2.filter((p2) => !p2.position && h2 === 0 || p2.position === d2).map((p2, _2) => {
-      var O2, G2;
-      return React2.createElement(ve, { key: p2.id, icons: st2, index: _2, toast: p2, defaultRichColors: F2, duration: (O2 = l == null ? void 0 : l.duration) != null ? O2 : et2, className: l == null ? void 0 : l.className, descriptionClassName: l == null ? void 0 : l.descriptionClassName, invert: a2, visibleToasts: ft2, closeButton: (G2 = l == null ? void 0 : l.closeButton) != null ? G2 : S2, interacting: lt, position: d2, style: l == null ? void 0 : l.style, unstyled: l == null ? void 0 : l.unstyled, classNames: l == null ? void 0 : l.classNames, cancelButtonStyle: l == null ? void 0 : l.cancelButtonStyle, actionButtonStyle: l == null ? void 0 : l.actionButtonStyle, removeToast: ct2, toasts: B2.filter((k2) => k2.position == p2.position), heights: nt2.filter((k2) => k2.position == p2.position), setHeights: it2, expandByDefault: w2, gap: at, loadingIcon: X2, expanded: Y2, pauseWhenPageIsHidden: rt, swipeDirections: e.swipeDirections });
-    })) : null;
-  }));
+  return reactExports.createElement("script", { ...w2, suppressHydrationWarning: true, nonce: typeof window == "undefined" ? d2 : "", dangerouslySetInnerHTML: { __html: `(${M.toString()})(${p2})` } });
 });
 const Toaster = ({ ...props }) => {
   const { theme = "system" } = z();
@@ -31269,771 +32251,23 @@ const Toaster = ({ ...props }) => {
     }
   );
 };
-function Input({ className, type, ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "input",
-    {
-      type,
-      "data-slot": "input",
-      className: cn(
-        "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-        className
-      ),
-      ...props
-    }
-  );
-}
-var NAME = "Label";
-var Label$1 = reactExports.forwardRef((props, forwardedRef) => {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Primitive.label,
-    {
-      ...props,
-      ref: forwardedRef,
-      onMouseDown: (event) => {
-        var _a3;
-        const target = event.target;
-        if (target.closest("button, input, select, textarea")) return;
-        (_a3 = props.onMouseDown) == null ? void 0 : _a3.call(props, event);
-        if (!event.defaultPrevented && event.detail > 1) event.preventDefault();
-      }
-    }
-  );
-});
-Label$1.displayName = NAME;
-var Root = Label$1;
-function Label({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Root,
-    {
-      "data-slot": "label",
-      className: cn(
-        "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-        className
-      ),
-      ...props
-    }
-  );
-}
-const BookCondition$1 = Variant({
-  "new": Null,
-  "fair": Null,
-  "good": Null,
-  "poor": Null
-});
-const BookId = Nat;
-const Time = Int;
-const BookSummary = Record({
-  "id": BookId,
-  "title": Text,
-  "ownerId": Principal2,
-  "createdAt": Time,
-  "author": Text,
-  "available": Bool,
-  "location": Text,
-  "condition": BookCondition$1
-});
-const UserRole = Variant({
-  "admin": Null,
-  "user": Null,
-  "guest": Null
-});
-const RequestId = Nat;
-const RequestStatus = Variant({
-  "pending": Null,
-  "approved": Null,
-  "rejected": Null
-});
-const BorrowRequestSummary = Record({
-  "id": RequestId,
-  "status": RequestStatus,
-  "borrowerId": Principal2,
-  "createdAt": Time,
-  "lenderId": Principal2,
-  "bookId": BookId
-});
-const BookUpdateFields = Record({
-  "title": Opt(Text),
-  "author": Opt(Text),
-  "location": Opt(Text),
-  "condition": Opt(BookCondition$1)
-});
-Service({
-  "_initializeAccessControl": Func([], [], []),
-  "addBook": Func(
-    [Text, Text, BookCondition$1, Text],
-    [BookSummary],
-    []
-  ),
-  "assignCallerUserRole": Func([Principal2, UserRole], [], []),
-  "deleteBook": Func([BookId], [Bool], []),
-  "getAIBookRecommendation": Func([Text], [Text], []),
-  "getCallerUserRole": Func([], [UserRole], ["query"]),
-  "isCallerAdmin": Func([], [Bool], ["query"]),
-  "isMyOpenAIConfigured": Func([], [Bool], ["query"]),
-  "isOpenAIConfigured": Func([], [Bool], ["query"]),
-  "listAllBooks": Func([], [Vec(BookSummary)], ["query"]),
-  "listMyBooks": Func([], [Vec(BookSummary)], ["query"]),
-  "listMyReceivedRequests": Func(
-    [],
-    [Vec(BorrowRequestSummary)],
-    ["query"]
-  ),
-  "listMySentRequests": Func(
-    [],
-    [Vec(BorrowRequestSummary)],
-    ["query"]
-  ),
-  "respondToBorrowRequest": Func([RequestId, Bool], [Bool], []),
-  "sendBorrowRequest": Func([BookId], [Opt(BorrowRequestSummary)], []),
-  "setMyOpenAIApiKey": Func([Text], [], []),
-  "updateBook": Func([BookId, BookUpdateFields], [Bool], [])
-});
-const idlFactory = ({ IDL: IDL2 }) => {
-  const BookCondition2 = IDL2.Variant({
-    "new": IDL2.Null,
-    "fair": IDL2.Null,
-    "good": IDL2.Null,
-    "poor": IDL2.Null
-  });
-  const BookId2 = IDL2.Nat;
-  const Time2 = IDL2.Int;
-  const BookSummary2 = IDL2.Record({
-    "id": BookId2,
-    "title": IDL2.Text,
-    "ownerId": IDL2.Principal,
-    "createdAt": Time2,
-    "author": IDL2.Text,
-    "available": IDL2.Bool,
-    "location": IDL2.Text,
-    "condition": BookCondition2
-  });
-  const UserRole2 = IDL2.Variant({
-    "admin": IDL2.Null,
-    "user": IDL2.Null,
-    "guest": IDL2.Null
-  });
-  const RequestId2 = IDL2.Nat;
-  const RequestStatus2 = IDL2.Variant({
-    "pending": IDL2.Null,
-    "approved": IDL2.Null,
-    "rejected": IDL2.Null
-  });
-  const BorrowRequestSummary2 = IDL2.Record({
-    "id": RequestId2,
-    "status": RequestStatus2,
-    "borrowerId": IDL2.Principal,
-    "createdAt": Time2,
-    "lenderId": IDL2.Principal,
-    "bookId": BookId2
-  });
-  const BookUpdateFields2 = IDL2.Record({
-    "title": IDL2.Opt(IDL2.Text),
-    "author": IDL2.Opt(IDL2.Text),
-    "location": IDL2.Opt(IDL2.Text),
-    "condition": IDL2.Opt(BookCondition2)
-  });
-  return IDL2.Service({
-    "_initializeAccessControl": IDL2.Func([], [], []),
-    "addBook": IDL2.Func(
-      [IDL2.Text, IDL2.Text, BookCondition2, IDL2.Text],
-      [BookSummary2],
-      []
-    ),
-    "assignCallerUserRole": IDL2.Func([IDL2.Principal, UserRole2], [], []),
-    "deleteBook": IDL2.Func([BookId2], [IDL2.Bool], []),
-    "getAIBookRecommendation": IDL2.Func([IDL2.Text], [IDL2.Text], []),
-    "getCallerUserRole": IDL2.Func([], [UserRole2], ["query"]),
-    "isCallerAdmin": IDL2.Func([], [IDL2.Bool], ["query"]),
-    "isMyOpenAIConfigured": IDL2.Func([], [IDL2.Bool], ["query"]),
-    "isOpenAIConfigured": IDL2.Func([], [IDL2.Bool], ["query"]),
-    "listAllBooks": IDL2.Func([], [IDL2.Vec(BookSummary2)], ["query"]),
-    "listMyBooks": IDL2.Func([], [IDL2.Vec(BookSummary2)], ["query"]),
-    "listMyReceivedRequests": IDL2.Func(
-      [],
-      [IDL2.Vec(BorrowRequestSummary2)],
-      ["query"]
-    ),
-    "listMySentRequests": IDL2.Func(
-      [],
-      [IDL2.Vec(BorrowRequestSummary2)],
-      ["query"]
-    ),
-    "respondToBorrowRequest": IDL2.Func([RequestId2, IDL2.Bool], [IDL2.Bool], []),
-    "sendBorrowRequest": IDL2.Func(
-      [BookId2],
-      [IDL2.Opt(BorrowRequestSummary2)],
-      []
-    ),
-    "setMyOpenAIApiKey": IDL2.Func([IDL2.Text], [], []),
-    "updateBook": IDL2.Func([BookId2, BookUpdateFields2], [IDL2.Bool], [])
-  });
-};
-function candid_some(value) {
-  return [
-    value
-  ];
-}
-function candid_none() {
-  return [];
-}
-var BookCondition = /* @__PURE__ */ ((BookCondition2) => {
-  BookCondition2["new_"] = "new";
-  BookCondition2["fair"] = "fair";
-  BookCondition2["good"] = "good";
-  BookCondition2["poor"] = "poor";
-  return BookCondition2;
-})(BookCondition || {});
-class Backend {
-  constructor(actor, _uploadFile, _downloadFile, processError2) {
-    this.actor = actor;
-    this._uploadFile = _uploadFile;
-    this._downloadFile = _downloadFile;
-    this.processError = processError2;
-  }
-  async _initializeAccessControl() {
-    if (this.processError) {
-      try {
-        const result = await this.actor._initializeAccessControl();
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor._initializeAccessControl();
-      return result;
-    }
-  }
-  async addBook(arg0, arg1, arg2, arg3) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.addBook(arg0, arg1, to_candid_BookCondition_n1(this._uploadFile, this._downloadFile, arg2), arg3);
-        return from_candid_BookSummary_n3(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.addBook(arg0, arg1, to_candid_BookCondition_n1(this._uploadFile, this._downloadFile, arg2), arg3);
-      return from_candid_BookSummary_n3(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async assignCallerUserRole(arg0, arg1) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n7(this._uploadFile, this._downloadFile, arg1));
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n7(this._uploadFile, this._downloadFile, arg1));
-      return result;
-    }
-  }
-  async deleteBook(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.deleteBook(arg0);
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.deleteBook(arg0);
-      return result;
-    }
-  }
-  async getAIBookRecommendation(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getAIBookRecommendation(arg0);
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getAIBookRecommendation(arg0);
-      return result;
-    }
-  }
-  async getCallerUserRole() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.getCallerUserRole();
-        return from_candid_UserRole_n9(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.getCallerUserRole();
-      return from_candid_UserRole_n9(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async isCallerAdmin() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.isCallerAdmin();
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.isCallerAdmin();
-      return result;
-    }
-  }
-  async isMyOpenAIConfigured() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.isMyOpenAIConfigured();
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.isMyOpenAIConfigured();
-      return result;
-    }
-  }
-  async isOpenAIConfigured() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.isOpenAIConfigured();
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.isOpenAIConfigured();
-      return result;
-    }
-  }
-  async listAllBooks() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.listAllBooks();
-        return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.listAllBooks();
-      return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async listMyBooks() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.listMyBooks();
-        return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.listMyBooks();
-      return from_candid_vec_n11(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async listMyReceivedRequests() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.listMyReceivedRequests();
-        return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.listMyReceivedRequests();
-      return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async listMySentRequests() {
-    if (this.processError) {
-      try {
-        const result = await this.actor.listMySentRequests();
-        return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.listMySentRequests();
-      return from_candid_vec_n12(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async respondToBorrowRequest(arg0, arg1) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.respondToBorrowRequest(arg0, arg1);
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.respondToBorrowRequest(arg0, arg1);
-      return result;
-    }
-  }
-  async sendBorrowRequest(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.sendBorrowRequest(arg0);
-        return from_candid_opt_n17(this._uploadFile, this._downloadFile, result);
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.sendBorrowRequest(arg0);
-      return from_candid_opt_n17(this._uploadFile, this._downloadFile, result);
-    }
-  }
-  async setMyOpenAIApiKey(arg0) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.setMyOpenAIApiKey(arg0);
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.setMyOpenAIApiKey(arg0);
-      return result;
-    }
-  }
-  async updateBook(arg0, arg1) {
-    if (this.processError) {
-      try {
-        const result = await this.actor.updateBook(arg0, to_candid_BookUpdateFields_n18(this._uploadFile, this._downloadFile, arg1));
-        return result;
-      } catch (e) {
-        this.processError(e);
-        throw new Error("unreachable");
-      }
-    } else {
-      const result = await this.actor.updateBook(arg0, to_candid_BookUpdateFields_n18(this._uploadFile, this._downloadFile, arg1));
-      return result;
-    }
-  }
-}
-function from_candid_BookCondition_n5(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n6(_uploadFile, _downloadFile, value);
-}
-function from_candid_BookSummary_n3(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n4(_uploadFile, _downloadFile, value);
-}
-function from_candid_BorrowRequestSummary_n13(_uploadFile, _downloadFile, value) {
-  return from_candid_record_n14(_uploadFile, _downloadFile, value);
-}
-function from_candid_RequestStatus_n15(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n16(_uploadFile, _downloadFile, value);
-}
-function from_candid_UserRole_n9(_uploadFile, _downloadFile, value) {
-  return from_candid_variant_n10(_uploadFile, _downloadFile, value);
-}
-function from_candid_opt_n17(_uploadFile, _downloadFile, value) {
-  return value.length === 0 ? null : from_candid_BorrowRequestSummary_n13(_uploadFile, _downloadFile, value[0]);
-}
-function from_candid_record_n14(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    status: from_candid_RequestStatus_n15(_uploadFile, _downloadFile, value.status),
-    borrowerId: value.borrowerId,
-    createdAt: value.createdAt,
-    lenderId: value.lenderId,
-    bookId: value.bookId
-  };
-}
-function from_candid_record_n4(_uploadFile, _downloadFile, value) {
-  return {
-    id: value.id,
-    title: value.title,
-    ownerId: value.ownerId,
-    createdAt: value.createdAt,
-    author: value.author,
-    available: value.available,
-    location: value.location,
-    condition: from_candid_BookCondition_n5(_uploadFile, _downloadFile, value.condition)
-  };
-}
-function from_candid_variant_n10(_uploadFile, _downloadFile, value) {
-  return "admin" in value ? "admin" : "user" in value ? "user" : "guest" in value ? "guest" : value;
-}
-function from_candid_variant_n16(_uploadFile, _downloadFile, value) {
-  return "pending" in value ? "pending" : "approved" in value ? "approved" : "rejected" in value ? "rejected" : value;
-}
-function from_candid_variant_n6(_uploadFile, _downloadFile, value) {
-  return "new" in value ? BookCondition.new : "fair" in value ? "fair" : "good" in value ? "good" : "poor" in value ? "poor" : value;
-}
-function from_candid_vec_n11(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_BookSummary_n3(_uploadFile, _downloadFile, x3));
-}
-function from_candid_vec_n12(_uploadFile, _downloadFile, value) {
-  return value.map((x3) => from_candid_BorrowRequestSummary_n13(_uploadFile, _downloadFile, x3));
-}
-function to_candid_BookCondition_n1(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n2(_uploadFile, _downloadFile, value);
-}
-function to_candid_BookUpdateFields_n18(_uploadFile, _downloadFile, value) {
-  return to_candid_record_n19(_uploadFile, _downloadFile, value);
-}
-function to_candid_UserRole_n7(_uploadFile, _downloadFile, value) {
-  return to_candid_variant_n8(_uploadFile, _downloadFile, value);
-}
-function to_candid_record_n19(_uploadFile, _downloadFile, value) {
-  return {
-    title: value.title ? candid_some(value.title) : candid_none(),
-    author: value.author ? candid_some(value.author) : candid_none(),
-    location: value.location ? candid_some(value.location) : candid_none(),
-    condition: value.condition ? candid_some(to_candid_BookCondition_n1(_uploadFile, _downloadFile, value.condition)) : candid_none()
-  };
-}
-function to_candid_variant_n2(_uploadFile, _downloadFile, value) {
-  return value == BookCondition.new ? {
-    new_: null
-  } : value == "fair" ? {
-    fair: null
-  } : value == "good" ? {
-    good: null
-  } : value == "poor" ? {
-    poor: null
-  } : value;
-}
-function to_candid_variant_n8(_uploadFile, _downloadFile, value) {
-  return value == "admin" ? {
-    admin: null
-  } : value == "user" ? {
-    user: null
-  } : value == "guest" ? {
-    guest: null
-  } : value;
-}
-function createActor(canisterId, _uploadFile, _downloadFile, options = {}) {
-  const agent = options.agent || HttpAgent.createSync({
-    ...options.agentOptions
-  });
-  if (options.agent && options.agentOptions) {
-    console.warn("Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.");
-  }
-  const actor = Actor.createActor(idlFactory, {
-    agent,
-    canisterId,
-    ...options.actorOptions
-  });
-  return new Backend(actor, _uploadFile, _downloadFile, options.processError);
-}
-function useBackendActor() {
-  return useActor(createActor);
-}
-function useIsMyOpenAIConfigured() {
-  const { actor, isFetching } = useBackendActor();
-  return useQuery({
-    queryKey: ["isMyOpenAIConfigured"],
-    queryFn: async () => {
-      if (!actor) return false;
-      return actor.isMyOpenAIConfigured();
-    },
-    enabled: !!actor && !isFetching
-  });
-}
-function useSetMyOpenAIApiKey() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (key) => {
-      if (!actor) throw new Error("Actor not available");
-      return actor.setMyOpenAIApiKey(key);
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["isMyOpenAIConfigured"] });
-    }
-  });
-}
-function mapBookSummary(b2) {
-  var _a3;
-  return {
-    id: b2.id,
-    title: b2.title,
-    author: b2.author,
-    condition: b2.condition,
-    isAvailable: b2.available,
-    ownerId: ((_a3 = b2.ownerId) == null ? void 0 : _a3.toString()) ?? "",
-    location: b2.location
-  };
-}
-function mapRequestSummary(r2) {
-  var _a3, _b3;
-  return {
-    id: r2.id,
-    bookId: r2.bookId,
-    borrowerId: ((_a3 = r2.borrowerId) == null ? void 0 : _a3.toString()) ?? "",
-    lenderId: ((_b3 = r2.lenderId) == null ? void 0 : _b3.toString()) ?? "",
-    status: r2.status,
-    createdAt: r2.createdAt
-  };
-}
-function useListAllBooks() {
-  const { actor, isFetching } = useBackendActor();
-  return useQuery({
-    queryKey: ["allBooks"],
-    queryFn: async () => {
-      if (!actor) return [];
-      const result = await actor.listAllBooks();
-      return result.map(mapBookSummary);
-    },
-    enabled: !!actor && !isFetching
-  });
-}
-function useListMyBooks() {
-  const { actor, isFetching } = useBackendActor();
-  return useQuery({
-    queryKey: ["myBooks"],
-    queryFn: async () => {
-      if (!actor) return [];
-      const result = await actor.listMyBooks();
-      return result.map(mapBookSummary);
-    },
-    enabled: !!actor && !isFetching
-  });
-}
-function useAddBook() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (params) => {
-      var _a3;
-      if (!actor) throw new Error("Actor not available");
-      return actor.addBook(
-        params.title,
-        params.author,
-        params.condition,
-        ((_a3 = params.location) == null ? void 0 : _a3.trim()) ?? ""
-      );
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
-      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
-    }
-  });
-}
-function useDeleteBook() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (bookId) => {
-      if (!actor) throw new Error("Actor not available");
-      return actor.deleteBook(bookId);
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
-      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
-    }
-  });
-}
-function useUpdateBook() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (params) => {
-      if (!actor) throw new Error("Actor not available");
-      return actor.updateBook(
-        params.bookId,
-        params.fields
-      );
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
-      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
-    }
-  });
-}
-function useSendBorrowRequest() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (bookId) => {
-      if (!actor) throw new Error("Actor not available");
-      return actor.sendBorrowRequest(bookId);
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["sentRequests"] });
-      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
-    }
-  });
-}
-function useRespondToBorrowRequest() {
-  const { actor } = useBackendActor();
-  const queryClient2 = useQueryClient();
-  return useMutation({
-    mutationFn: async (params) => {
-      if (!actor) throw new Error("Actor not available");
-      return actor.respondToBorrowRequest(params.requestId, params.approve);
-    },
-    onSuccess: () => {
-      queryClient2.invalidateQueries({ queryKey: ["receivedRequests"] });
-      queryClient2.invalidateQueries({ queryKey: ["myBooks"] });
-      queryClient2.invalidateQueries({ queryKey: ["allBooks"] });
-    }
-  });
-}
-function useListMyReceivedRequests() {
-  const { actor, isFetching } = useBackendActor();
-  return useQuery({
-    queryKey: ["receivedRequests"],
-    queryFn: async () => {
-      if (!actor) return [];
-      const result = await actor.listMyReceivedRequests();
-      return result.map(mapRequestSummary);
-    },
-    enabled: !!actor && !isFetching
-  });
-}
-function useListMySentRequests() {
-  const { actor, isFetching } = useBackendActor();
-  return useQuery({
-    queryKey: ["sentRequests"],
-    queryFn: async () => {
-      if (!actor) return [];
-      const result = await actor.listMySentRequests();
-      return result.map(mapRequestSummary);
-    },
-    enabled: !!actor && !isFetching
-  });
-}
-function useGetAIBookRecommendation() {
-  const { actor } = useBackendActor();
-  return useMutation({
-    mutationFn: async (prompt) => {
-      if (!actor) throw new Error("Actor not available");
-      const message = await actor.getAIBookRecommendation(prompt);
-      return { message, suggestedBookIds: [] };
-    }
-  });
-}
 function SettingsPage({ onBack }) {
   const { data: isConfigured, isLoading: configuredLoading } = useIsMyOpenAIConfigured();
   const setKeyMutation = useSetMyOpenAIApiKey();
+  const { data: currentName, isLoading: nameLoading } = useGetUserName();
+  const setNameMutation = useSetUserName();
   const [apiKey, setApiKey] = reactExports.useState("");
   const [showForm, setShowForm] = reactExports.useState(false);
+  const [displayName, setDisplayName] = reactExports.useState("");
+  const [nameError, setNameError] = reactExports.useState("");
+  const [nameSaved, setNameSaved] = reactExports.useState(false);
+  const didPrefill = { current: false };
+  reactExports.useEffect(() => {
+    if (currentName && !didPrefill.current) {
+      didPrefill.current = true;
+      setDisplayName(currentName);
+    }
+  }, [currentName]);
   const handleSaveKey = async (e) => {
     e.preventDefault();
     if (!apiKey.trim()) return;
@@ -32044,6 +32278,27 @@ function SettingsPage({ onBack }) {
       ue.success("OpenAI API key saved successfully.");
     } catch {
       ue.error("Failed to save API key. Please try again.");
+    }
+  };
+  const handleSaveName = async (e) => {
+    e.preventDefault();
+    const trimmed = displayName.trim();
+    if (!trimmed) {
+      setNameError("Display name cannot be empty.");
+      return;
+    }
+    if (trimmed.length > 60) {
+      setNameError("Name must be 60 characters or fewer.");
+      return;
+    }
+    setNameError("");
+    try {
+      await setNameMutation.mutateAsync(trimmed);
+      setNameSaved(true);
+      setTimeout(() => setNameSaved(false), 3e3);
+      ue.success("Display name updated.");
+    } catch {
+      ue.error("Failed to update name. Please try again.");
     }
   };
   const keyIsSet = !configuredLoading && isConfigured === true;
@@ -32068,108 +32323,176 @@ function SettingsPage({ onBack }) {
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "font-display font-bold text-xl text-foreground", children: "Settings" })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-w-xl mx-auto px-6 py-8 space-y-8", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { className: "h-5 w-5 text-primary" }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-foreground", children: "OpenAI API Key" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Your personal key for AI book recommendations." })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-xl mx-auto px-6 py-8 space-y-8", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(User, { className: "h-5 w-5 text-primary" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-foreground", children: "Display Name" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Shown on your book listings and borrow requests." })
+              ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ml-auto", "data-ocid": "settings.key_status", children: configuredLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin text-muted-foreground" }) : keyIsSet ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-xs font-medium text-success", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-3.5 w-3.5" }),
-              "Key is set"
-            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-xs font-medium text-destructive", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-3.5 w-3.5" }),
-              "Key not set"
-            ] }) })
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-card p-4 space-y-4", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
-              "Your OpenAI API key is stored securely on the canister and never exposed to the frontend. It powers the AI Librarian so you can get personalised book recommendations. Get your key at",
-              " ",
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "a",
-                {
-                  href: "https://platform.openai.com/api-keys",
-                  target: "_blank",
-                  rel: "noopener noreferrer",
-                  className: "text-primary hover:underline",
-                  children: "platform.openai.com/api-keys"
-                }
-              ),
-              "."
-            ] }),
-            keyIsSet && !showForm && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground font-mono tracking-widest", children: "sk-••••••••••••••••••••" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(
-                Button,
-                {
-                  type: "button",
-                  variant: "outline",
-                  size: "sm",
-                  onClick: () => setShowForm(true),
-                  "data-ocid": "settings.change_key_button",
-                  children: "Change key"
-                }
-              )
-            ] }),
-            formVisible && /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSaveKey, className: "space-y-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl border border-border bg-card p-4", children: nameLoading ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-muted-foreground", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin" }),
+              "Loading..."
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSaveName, className: "space-y-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "api-key-input", children: "New API Key" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "display-name", children: "Your name" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Input,
                   {
-                    id: "api-key-input",
-                    type: "password",
-                    placeholder: "sk-...",
-                    value: apiKey,
-                    onChange: (e) => setApiKey(e.target.value),
-                    className: "font-mono text-sm",
-                    autoComplete: "off",
-                    "data-ocid": "settings.api_key_input"
-                  }
-                ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "The key is only visible while you're typing. After saving, only the indicator above will update." })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
-                keyIsSet && /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  Button,
-                  {
-                    type: "button",
-                    variant: "outline",
-                    className: "flex-1",
-                    onClick: () => {
-                      setShowForm(false);
-                      setApiKey("");
+                    id: "display-name",
+                    type: "text",
+                    placeholder: "e.g. Alex Reader",
+                    value: displayName,
+                    onChange: (e) => {
+                      setDisplayName(e.target.value);
+                      if (nameError) setNameError("");
+                      if (nameSaved) setNameSaved(false);
                     },
-                    "data-ocid": "settings.cancel_key_button",
-                    children: "Cancel"
+                    maxLength: 60,
+                    "data-ocid": "settings.display_name_input"
                   }
                 ),
+                nameError && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "p",
+                  {
+                    className: "text-xs text-destructive",
+                    "data-ocid": "settings.name_field_error",
+                    children: nameError
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   Button,
                   {
                     type: "submit",
-                    disabled: !apiKey.trim() || setKeyMutation.isPending,
-                    className: "flex-1",
-                    "data-ocid": "settings.save_key_button",
-                    children: setKeyMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    disabled: !displayName.trim() || setNameMutation.isPending || displayName.trim() === (currentName ?? ""),
+                    "data-ocid": "settings.save_name_button",
+                    children: setNameMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" }),
                       "Saving..."
-                    ] }) : "Save Key"
+                    ] }) : "Save Name"
+                  }
+                ),
+                nameSaved && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "span",
+                  {
+                    className: "text-xs text-success flex items-center gap-1",
+                    "data-ocid": "settings.name_success_state",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-3.5 w-3.5" }),
+                      "Saved!"
+                    ]
                   }
                 )
               ] })
+            ] }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Key, { className: "h-5 w-5 text-primary" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-foreground", children: "OpenAI API Key" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "Your personal key for AI book recommendations." })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ml-auto", "data-ocid": "settings.key_status", children: configuredLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "h-4 w-4 animate-spin text-muted-foreground" }) : keyIsSet ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-xs font-medium text-success", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "h-3.5 w-3.5" }),
+                "Key is set"
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-xs font-medium text-destructive", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { className: "h-3.5 w-3.5" }),
+                "Key not set"
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-xl border border-border bg-card p-4 space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Your OpenAI API key is stored securely on the canister and never exposed to the frontend. It powers the AI Librarian so you can get personalised book recommendations. Get your key at",
+                " ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "a",
+                  {
+                    href: "https://platform.openai.com/api-keys",
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                    className: "text-primary hover:underline",
+                    children: "platform.openai.com/api-keys"
+                  }
+                ),
+                "."
+              ] }),
+              keyIsSet && !showForm && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground font-mono tracking-widest", children: "sk-••••••••••••••••••••" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Button,
+                  {
+                    type: "button",
+                    variant: "outline",
+                    size: "sm",
+                    onClick: () => setShowForm(true),
+                    "data-ocid": "settings.change_key_button",
+                    children: "Change key"
+                  }
+                )
+              ] }),
+              formVisible && /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSaveKey, className: "space-y-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "api-key-input", children: "New API Key" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Input,
+                    {
+                      id: "api-key-input",
+                      type: "password",
+                      placeholder: "sk-...",
+                      value: apiKey,
+                      onChange: (e) => setApiKey(e.target.value),
+                      className: "font-mono text-sm",
+                      autoComplete: "off",
+                      "data-ocid": "settings.api_key_input"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "The key is only visible while you're typing. After saving, only the indicator above will update." })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+                  keyIsSet && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      type: "button",
+                      variant: "outline",
+                      className: "flex-1",
+                      onClick: () => {
+                        setShowForm(false);
+                        setApiKey("");
+                      },
+                      "data-ocid": "settings.cancel_key_button",
+                      children: "Cancel"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      type: "submit",
+                      disabled: !apiKey.trim() || setKeyMutation.isPending,
+                      className: "flex-1",
+                      "data-ocid": "settings.save_key_button",
+                      children: setKeyMutation.isPending ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "mr-2 h-4 w-4 animate-spin" }),
+                        "Saving..."
+                      ] }) : "Save Key"
+                    }
+                  )
+                ] })
+              ] })
             ] })
           ] })
-        ] }) }) })
+        ] }) })
       ]
     }
   );
 }
-const DashboardPage = reactExports.lazy(() => __vitePreload(() => import("./DashboardPage-DV0S1dlo.js"), true ? __vite__mapDeps([0,1,2,3]) : void 0));
-const MyBooksPage = reactExports.lazy(() => __vitePreload(() => import("./MyBooksPage-BT-9MpAz.js"), true ? __vite__mapDeps([4,1,5,3]) : void 0));
-const RequestsPage = reactExports.lazy(() => __vitePreload(() => import("./RequestsPage-8RGQtOt4.js"), true ? __vite__mapDeps([6,1,5,2]) : void 0));
+const DashboardPage = reactExports.lazy(() => __vitePreload(() => import("./DashboardPage-5LPxstRj.js"), true ? __vite__mapDeps([0,1,2,3]) : void 0));
+const MyBooksPage = reactExports.lazy(() => __vitePreload(() => import("./MyBooksPage-BCqor2xu.js"), true ? __vite__mapDeps([4,1,5,3]) : void 0));
+const RequestsPage = reactExports.lazy(() => __vitePreload(() => import("./RequestsPage-DEAUaRsK.js"), true ? __vite__mapDeps([6,1,5,2]) : void 0));
 function PageLoader() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-8 space-y-4 max-w-7xl mx-auto", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-10 w-64" }),
@@ -32209,6 +32532,9 @@ class PageErrorBoundary extends reactExports.Component {
 function AppContent() {
   const [currentRoute, setCurrentRoute] = reactExports.useState("dashboard");
   const { logout } = useAuth();
+  const { data: userName, isLoading: nameLoading } = useGetUserName();
+  const nameIsReady = !nameLoading;
+  const needsName = nameIsReady && (userName === null || userName === void 0 || userName.trim() === "");
   const handleLogout = () => {
     setCurrentRoute("dashboard");
     logout();
@@ -32237,7 +32563,14 @@ function AppContent() {
         children: /* @__PURE__ */ jsxRuntimeExports.jsx(PageErrorBoundary, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(reactExports.Suspense, { fallback: /* @__PURE__ */ jsxRuntimeExports.jsx(PageLoader, {}), children: renderPage() }) })
       }
     ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, { richColors: true, closeButton: true })
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, { richColors: true, closeButton: true }),
+    nameIsReady && needsName && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      NamePromptModal,
+      {
+        onNameSet: () => {
+        }
+      }
+    )
   ] });
 }
 function App() {
@@ -32251,8 +32584,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(InternetIdentityProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
 export {
-  cva as A,
+  Slot as A,
   Button as B,
+  cva as C,
   Input as I,
   LoaderCircle as L,
   ReactDOM$2 as R,
@@ -32260,28 +32594,28 @@ export {
   X,
   useSendBorrowRequest as a,
   useGetAIBookRecommendation as b,
-  useIsMyOpenAIConfigured as c,
-  Skeleton as d,
-  BookOpen as e,
-  ue as f,
-  createLucideIcon as g,
-  useComposedRefs as h,
-  cn as i,
+  createLucideIcon as c,
+  useIsMyOpenAIConfigured as d,
+  useGetUserName as e,
+  Skeleton as f,
+  BookOpen as g,
+  ue as h,
+  useComposedRefs as i,
   jsxRuntimeExports as j,
-  reactDomExports as k,
-  useListMyBooks as l,
-  useAddBook as m,
-  useDeleteBook as n,
-  useUpdateBook as o,
-  Label as p,
-  BookMarked as q,
+  cn as k,
+  reactDomExports as l,
+  useListMyBooks as m,
+  useAddBook as n,
+  useDeleteBook as o,
+  useUpdateBook as p,
+  Label as q,
   reactExports as r,
-  useListMyReceivedRequests as s,
-  useListMySentRequests as t,
+  BookMarked as s,
+  useListMyReceivedRequests as t,
   useListAllBooks as u,
-  useRespondToBorrowRequest as v,
-  React$2 as w,
-  composeRefs as x,
-  React2 as y,
-  Slot as z
+  useListMySentRequests as v,
+  useRespondToBorrowRequest as w,
+  React$2 as x,
+  composeRefs as y,
+  React2 as z
 };
